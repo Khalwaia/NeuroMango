@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NeuroMango Music Queue</title>
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;800&display=swap" rel="stylesheet">
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: transparent; /* Transparent for OBS */
+            color: white;
+            font-family: 'Montserrat', sans-serif;
+            overflow: hidden; /* Hide scrollbars in OBS */
+        }
+
+        #widget-container {
+            width: 350px;
+            background: rgba(20, 20, 25, 0.85);
+            backdrop-filter: blur(10px);
+            border-radius: 16px;
+            padding: 15px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .header {
+            font-size: 14px;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: #ff0055;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .header span {
+            display: inline-block;
+            width: 8px;
+            height: 8px;
+            background-color: #ff0055;
+            border-radius: 50%;
+            animation: pulse 1.5s infinite;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(255, 0, 85, 0.7); }
+            70% { transform: scale(1); box-shadow: 0 0 0 6px rgba(255, 0, 85, 0); }
+            100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(255, 0, 85, 0); }
+        }
+
+        .current-song {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            background: rgba(255,255,255,0.05);
+            padding: 10px;
+            border-radius: 12px;
+            margin-bottom: 15px;
+        }
+
+        .current-song img {
+            width: 60px;
+            height: 60px;
+            border-radius: 8px;
+            object-fit: cover;
+        }
+
+        .song-info {
+            flex-grow: 1;
+            overflow: hidden;
+        }
+
+        .song-title {
+            font-size: 14px;
+            font-weight: 600;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            margin-bottom: 4px;
+        }
+
+        .song-requester {
+            font-size: 11px;
+            color: #aaa;
+        }
+        
+        .song-requester span {
+            color: #00e5ff;
+            font-weight: 600;
+        }
+
+        .queue-list {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .queue-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 12px;
+            color: #ddd;
+        }
+
+        .queue-item img {
+            width: 32px;
+            height: 32px;
+            border-radius: 4px;
+            object-fit: cover;
+        }
+
+        .queue-item-title {
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        /* The actual YouTube player is hidden because we only need the audio! */
+        #youtube-player {
+            position: absolute;
+            top: -9999px;
+            left: -9999px;
+            width: 1px;
+            height: 1px;
+            opacity: 0;
+        }
+
+        .hidden {
+            display: none !important;
+        }
+    </style>
+</head>
+<body>
+
+    <div id="widget-container" class="hidden">
+        <div class="header">
+            <span></span> Сейчас играет
+        </div>
+        
+        <div class="current-song" id="current-song">
+            <img src="" id="current-thumb" alt="Cover">
+            <div class="song-info">
+                <div class="song-title" id="current-title">Загрузка...</div>
+                <div class="song-requester">от: <span id="current-requester">НеМанго</span></div>
+            </div>
+        </div>
+
+        <div class="queue-list" id="queue-list">
+            <!-- Queue items injected via JS -->
+        </div>
+    </div>
+
+    <!-- Hidden Youtube Player -->
+    <div id="youtube-player"></div>
+
+    <script src="https://www.youtube.com/iframe_api"></script>
+    <script src="js/widget.js"></script>
+</body>
+</html>

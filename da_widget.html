@@ -1,0 +1,675 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Alerts widget - DonationAlerts</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <link rel="apple-touch-icon" sizes="57x57" href="/apple-touch-icon-57x57.png?v=2">
+    <link rel="apple-touch-icon" sizes="60x60" href="/apple-touch-icon-60x60.png?v=2">
+    <link rel="apple-touch-icon" sizes="72x72" href="/apple-touch-icon-72x72.png?v=2">
+    <link rel="apple-touch-icon" sizes="76x76" href="/apple-touch-icon-76x76.png?v=2">
+    <link rel="apple-touch-icon" sizes="114x114" href="/apple-touch-icon-114x114.png?v=2">
+    <link rel="apple-touch-icon" sizes="120x120" href="/apple-touch-icon-120x120.png?v=2">
+    <link rel="apple-touch-icon" sizes="144x144" href="/apple-touch-icon-144x144.png?v=2">
+    <link rel="apple-touch-icon" sizes="152x152" href="/apple-touch-icon-152x152.png?v=2">
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon-180x180.png?v=2">
+    <link rel="icon" type="image/png" href="/favicon-32x32.png?v=2" sizes="32x32">
+    <link rel="icon" type="image/png" href="/android-chrome-192x192.png?v=2" sizes="192x192">
+    <link rel="icon" type="image/png" href="/favicon-96x96.png?v=2" sizes="96x96">
+    <link rel="icon" type="image/png" href="/favicon-16x16.png?v=2" sizes="16x16">
+    <link rel="manifest" href="/manifest.json?v=2">
+    <link rel="mask-icon" href="/safari-pinned-tab.svg?v=2" color="#5bbad5">
+    <link rel="shortcut icon" href="/favicon.ico?v=2">
+    <meta name="msapplication-TileColor" content="#fb8c2b">
+    <meta name="msapplication-TileImage" content="/mstile-144x144.png?v=2">
+    <meta name="theme-color" content="#ffffff">
+    <meta name="robots" content="noindex">
+
+    <link href='https://fonts.googleapis.com/css?family=Roboto+Condensed:400,700,300&subset=latin,cyrillic-ext,cyrillic,latin-ext'
+          rel='stylesheet' type='text/css'>
+
+    <link href="/css/widget_base.css?v=819" media="screen" rel="stylesheet" type="text/css">
+    <link href="/css/animate.css?v=819" media="screen" rel="stylesheet" type="text/css">
+
+    <script>
+        var STATIC_FILES_PATH = 'https://files.donationalerts.com';
+        token = 'WD7WKvBg1w894ib8Skkz';
+    </script>
+
+    <!--[if lt IE 9]><script type="text/javascript" src="/js/html5shiv.js?v=819"></script><![endif]-->
+    <!--[if lt IE 9]><script type="text/javascript" src="/js/respond.min.js?v=819"></script><![endif]-->
+    <script type="text/javascript" src="/js/jquery.min.js?v=819"></script>
+    <script type="text/javascript" src="/js/languages.js?v=819"></script>
+    <script type="text/javascript" src="/js/primary.js?v=819"></script>
+    <script type="text/javascript" src="/js/widget.js?v=819"></script>
+    <script type="text/javascript" src="/js/tmi.min.js?v=819"></script>
+    <script type="text/javascript" src="/js/jquery.lettering-0.6.1.min.js?v=819"></script>
+    <script type="text/javascript" src="/js/jquery.browser.min.js?v=819"></script>
+    <script type="text/javascript" src="/js/bootstrap.min.js?v=819"></script>
+
+    <script type="text/javascript" src="/js/axios.1.12.2.min.js?v=819"></script>
+    <script type="text/javascript" src="/js/socket.io-2.0.1.js?v=819"></script>
+    <script type="text/javascript" src="/js/centrifuge.2.8.5.js?v=819"></script>
+    <script type="text/javascript" src="/js/widget/FrontEnv.js?v=819"></script>
+    <script type="text/javascript" src="/js/widget/WidgetSession.js?v=819"></script>
+    <script type="text/javascript" src="/js/widget/ApiClient.js?v=819"></script>
+    <script type="text/javascript" src="/js/widget/ApiLegacyClient.js?v=819"></script>
+    <script type="text/javascript" src="/js/widget/WidgetState.js?v=819"></script>
+    <script type="text/javascript" src="/js/widget/AlertLogger.js?v=819"></script>
+
+    <script type="text/javascript" src="/js/widget/socket/CentrifugoClient.js?v=819"></script>
+
+    <script type="text/javascript" src="/js/widget/SharedWorkerProxy.js?v=819"></script>
+    <script type="text/javascript" src="/js/widget/socket/SocketIOClient.js?v=819"></script>
+    <script type="text/javascript" src="/js/widget/socket/SocketIOClientProxy.js?v=819"></script>
+    <script type="text/javascript" src="/js/widget/integration/TwitchClient.js?v=819"></script>
+    <script type="text/javascript" src="/js/widget/integration/TwitchClientProxy.js?v=819"></script>
+    <script type="text/javascript" src="/js/widget/integration/YoutubeClient.js?v=819"></script>
+    <script type="text/javascript" src="/js/widget/integration/YoutubeClientProxy.js?v=819"></script>
+
+    <script type="text/javascript" src="/js/ga.js?v=819"></script>
+
+<script type="text/javascript">
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+    (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+    m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-30021773-2', 'auto');
+  ga('send', 'pageview');
+
+  $(function () {
+    if (typeof $().daGa === 'function') {
+      $('.da-ga').daGa();
+    }
+  });
+</script>
+
+<!-- mytopf.com counter -->
+<script type="text/javascript">
+var _tmr = window._tmr || (window._tmr = []);
+_tmr.push({id: "2798124", type: "pageView", start: (new Date()).getTime()});
+_tmr.push({id: "2798124", type: "sendEvent", category: "locale", action: "en_US", label: "en_US" });
+(function (d, w, id) {
+  if (d.getElementById(id)) return;
+  var ts = d.createElement("script"); ts.type = "text/javascript"; ts.async = true; ts.id = id;
+  ts.src = "https://mytopf.com/js/code.js";
+  var f = function () {var s = d.getElementsByTagName("script")[0]; s.parentNode.insertBefore(ts, s);};
+  if (w.opera == "[object Opera]") { d.addEventListener("DOMContentLoaded", f, false); } else { f(); }
+})(document, window, "tmr-code");
+</script>
+<noscript><div><img src="https://mytopf.com/counter?id=2798124;js=na" style="position:absolute;left:-9999px;" alt="mytopf.com" /></div></noscript>
+<!-- /mytopf.com counter -->
+
+    <script type="text/javascript">
+      widget_version = "1";
+      api_config = {
+        twitch: {
+          client_id: '4l56ta1x0mptop7rbd5nsspbwxzxz7b'
+        }
+      };
+      document_language = 'ru_RU';
+      alert_8_billing_system_types = [];
+      access_token = 'eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJhdWQiOiIyIiwianRpIjoiODdjMGQ1M2VhMzg4MjZjMjgwYWMyMmFlODdmMWYxNTYxMDQ1NGU4ZTEyZDYyY2QyNjk2YzkwYTkzOTA5ODc5MDFiMzc4Y2JmNjNjM2Q1YzMiLCJpYXQiOjE3ODMxOTI1ODIuMDc0LCJuYmYiOjE3ODMxOTI1ODIuMDc0LCJleHAiOjE3ODM3OTczODIuMDY1NSwic3ViIjoiOTU4NTE3NSIsInNjb3BlcyI6WyJ3aWRnZXQtc3RyZWFtZXIiXX0.A6ZfokiqIdoATOezNNnH_AY0QlqkHDsJeZsyaekTlkqOmvIUK8rkmm6TF9nV-D672YYHD4NjhsbDzllYOmafd76NzBhvBRRoPcUhplfx69tHW6W1sJjMeKt98RjZbv6rZpOtFrf2vZKfyWpleOomq-d3z-qG8jT0lQMWmCG4ltWummkUtYUnoE99P627OsH1qwjg1rCZTO6p4fXFQWb2yywMdWx5Z6PL47H_3BKMaETC5t6n44d1raVwp23NenFz5YnNSekOOp3lLBcM_BsF3vYHcOzlxTUbxHNYTbsDNnMhvS3-gBPkNWydsuREkUmINe_kso10FnrVmWkulk9YnHEbSk6mq8iJq0SlicTVLAsZ4sOJIWr9g_M_qFZb01DAWPFPQXL4VXT5eHZpkkt24bNhBX_Gw06Xrgl0Ju8bPXPGOPAL_3UxuvXvtR8m9HmdOMHwXiT0zInzU5dpgG-S2vizZYL9--ZF6N9VW8TWSUspmoZ3Lm9WXkJ2cA2QHouHCcWQ0hCWhFI5R5DXXo55TUMudaxcgsA0OxVJyzNdWFUUdA4gX0v7JMuMjDY72-s3V4R1EjeKYaUmVRYwuxmyS6QYpvtFi0-6hjDJngyQSVYgPeKtUrld1lCFCHBWsXLPB6E7kBEdvU2NE8j4JRwvuV9vCsziq0gPeP8KBgQmIQY';
+      widgetId = 48824626;
+      widgetType = 'alerts';
+      logId = null;
+    </script>
+
+</head>
+<body>
+
+<div class="wrapper ">
+        <script type="text/javascript" src="/js/soundmanager2-jsmin.js?v=819"></script>
+
+    <script type="text/javascript">
+      var server_timestamp = 1783192625;
+      setInterval(function () {
+        server_timestamp++;
+      }, 1000);
+
+      function debug(text) {
+                if (text == '+' || text == '.') return false;
+        $('#debug').append('<div>' + htmlEntities(text) + '</div>');
+              }
+
+      
+              da_debug = false;
+          </script>
+
+    <div id="debug" style="color:white; background:rgba(0, 0, 0, 0.9); position:absolute; z-index:99999;"></div>
+    <div class="container"    >
+      <div class="valign-fix" align="center">
+        <div class="alert-container">
+          <div id="poll-alert"></div>
+          <div id="donation-alert"></div>
+        </div>
+      </div>
+    </div>
+
+    
+    <script>
+
+      var host_da = "https://www.donationalerts.com";
+      var is_beta_user = "0";
+      var is_mobile_da =  false ;
+      var alerts_array = {
+        '1': [],
+'2': [],
+'3': [],
+'4': [],
+'5': [],
+'6': [],
+'7': [],
+'8': [],
+'9': [],
+'10': [],
+'11': [],
+'12': [],
+'13': [],
+'14': [],
+'15': [],
+'16': [],
+'17': [],
+'18': [],
+'19': [],
+'20': [],
+'26': [],
+'27': [],
+'28': [],
+'29': [],
+'30': [],
+'31': [],
+'32': [],
+'33': [],
+'34': [],
+'35': [],
+'36': [],
+      };
+      var group_id = 1;
+      var alerts_id_to_show = {
+        '1': [],
+'2': [],
+'3': [],
+'4': [],
+'5': [],
+'6': [],
+'7': [],
+'8': [],
+'9': [],
+'10': [],
+'11': [],
+'12': [],
+'13': [],
+'14': [],
+'15': [],
+'16': [],
+'17': [],
+'18': [],
+'19': [],
+'20': [],
+'26': [],
+'27': [],
+'28': [],
+'29': [],
+'30': [],
+'31': [],
+'32': [],
+'33': [],
+'34': [],
+'35': [],
+'36': [],
+      };
+      var shown_alerts = {
+        '1': [],
+'2': [],
+'3': [],
+'4': [],
+'5': [],
+'6': [],
+'7': [],
+'8': [],
+'9': [],
+'10': [],
+'11': [],
+'12': [],
+'13': [],
+'14': [],
+'15': [],
+'16': [],
+'17': [],
+'18': [],
+'19': [],
+'20': [],
+'26': [],
+'27': [],
+'28': [],
+'29': [],
+'30': [],
+'31': [],
+'32': [],
+'33': [],
+'34': [],
+'35': [],
+'36': [],
+      };
+      var moderated_alerts = {
+        '1': [],
+'2': [],
+'3': [],
+'4': [],
+'5': [],
+'6': [],
+'7': [],
+'8': [],
+'9': [],
+'10': [],
+'11': [],
+'12': [],
+'13': [],
+'14': [],
+'15': [],
+'16': [],
+'17': [],
+'18': [],
+'19': [],
+'20': [],
+'26': [],
+'27': [],
+'28': [],
+'29': [],
+'30': [],
+'31': [],
+'32': [],
+'33': [],
+'34': [],
+'35': [],
+'36': [],
+      };
+      var isXsplit = false;
+      var tts_mins = $.parseJSON('{"USD":0,"RUB":"0.00","EUR":0,"BYR":0,"KZT":0,"UAH":0,"BYN":0,"BRL":0,"TRY":0,"PLN":0,"UZS":0}');
+
+      if (isLocalStorageSupported() === true) {
+        var alerting_alert_types = [];
+        for (var i = 1; i <= 6; i++) {
+          localStorage.setItem('group_id_' + i + '_alerting', false);
+          // var is_group_alerting = localStorage.getItem('group_id_' + i + '_alerting');
+          // if (is_group_alerting == null || is_group_alerting == 'false') {
+
+          // } else {
+          //   alerting_alert_types.push(parseInt(is_group_alerting));
+          // }
+        }
+
+        if (localStorage.getItem('group_id_' + group_id + '_alerting') == null) localStorage.setItem('group_id_' + group_id + '_alerting', false);
+
+        $.each(alerts_array, function (alert_type, alerts_to_display) {
+          if (alerting_alert_types.indexOf(parseInt(alert_type)) == -1) {
+            localStorage.setItem('is_alerting_' + alert_type, false);
+          } else {
+            localStorage.setItem('is_alerting_' + alert_type, true);
+          }
+        });
+
+        if (da_debug) debug('Alerting alert types: ' + JSON.stringify(alerting_alert_types));
+
+        [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,26,27,28,29,30,31,32].forEach(function(item) {
+          localStorage.setItem('is_alerting_' + item, false);
+        });
+      }
+
+      window.onbeforeunload = function () {
+        if (isLocalStorageSupported() === true) {
+          var alerting_alert_type = localStorage.getItem('group_id_' + group_id + '_alerting');
+          if (alerting_alert_type != 'false' && alerting_alert_type != null) {
+            localStorage.setItem('is_alerting_' + alerting_alert_type, false);
+          }
+          localStorage.removeItem('group_id_' + group_id + '_alerting');
+        }
+      };
+
+      var preloadedImages = new Array();
+
+      function preloadImages(images) {
+        for (i = 0; i < images.length; i++) {
+          preloadedImages[i] = new Image();
+          preloadedImages[i].src = images[i].substring(0, 8) == 'https://' ? images[i] : 'https://files.donationalerts.com/uploads/' + images[i];
+        }
+      }
+
+      var preloadedSounds = new Array();
+
+      function preloadSounds(sounds) {
+        for (i = 0; i < sounds.length; i++) {
+          preloadedSounds[i] = new Audio();
+          preloadedSounds[i].src = sounds[i].substring(0, 8) == 'https://' ? sounds[i] : 'https://files.donationalerts.com/uploads/' + sounds[i];
+          preloadedSounds[i].preload = 'auto';
+          preloadedSounds[i].volume = 0;
+          $(preloadedSounds[i]).on('loadeddata', false);
+        }
+      }
+
+      handleGeneralWidgetSettings('{\"main_currency\":\"RUB\",\"remove_links\":0,\"black_list_words\":null,\"allow_emotes\":1,\"donation_audio_is_enabled\":0,\"alert_moderation_is_enabled\":0,\"alert_moderation_duration\":15,\"alert_moderation_max_amount\":null,\"donation_mins_multiplier\":1,\"alerts_sound\":true}');
+
+      function initWidget(settings) {
+        if (
+          typeof alerts_widget_settings === 'undefined' ||
+          typeof settings['_additional'] === 'undefined' ||
+          typeof settings['_additional'].source === 'undefined' ||
+          settings['_additional'].source !== 'zf2'
+        ) {
+          var dynamic_variations = [];
+        }else{
+          var dynamic_variations = alerts_widget_settings.variations.filter(function(el){
+            return el.is_dynamic == 1;
+          });
+        }
+
+        delete settings['_additional'];
+
+        alerts_widget_settings = settings;
+        alerts_widget_settings.variations = alerts_widget_settings.variations.concat(dynamic_variations);
+
+        available_variation_ids = [];
+        available_alert_types_ids = [];
+        available_alert_types_map = {"1":"donation","2":"vk_video_share","3":"vk_subscriber","4":"twitch_subscriber","5":"vk_video_gifts","6":"twitch_follower","7":"youtube_subscriber","8":"merchandise","9":"merchandise_rare_item","10":"youtube_sponsor","11":"twitch_bits","12":"custom_alert","13":"twitch_gift_subscriber","14":"twitch_gift_renewal_subscriber","15":"twitch_prime_subscriber","16":"twitch_mysterygift","17":"twitch_raid","19":"twitch_reward","20":"boosty_subscriber","27":"vkplay_follow","28":"vkplay_subscription_recurrent_pay","29":"vkplay_gifted_subscription_acceptation","30":"vkplay_gifted_subscription_purchase","31":"vkplay_giveaway_win","32":"third_party_donation","33":"kick_follow","34":"kick_subscription","35":"kick_gifted_subscription","36":"kick_community_gift"};
+        images_used = [];
+        sounds_used = [];
+
+        $.each(alerts_widget_settings.variations, function (index, value) {
+          alerts_widget_settings.variations[index].additional_data = $.parseJSON(value.additional_data);
+          available_variation_ids.push(parseInt(value.entity_id));
+          if (value.image != '') {
+            if (images_used.length < 10 && images_used.indexOf(value.image) == -1) {
+              images_used.push(value.image);
+            }
+          }
+          if (value.sound != '') {
+            if (sounds_used.length < 25 && sounds_used.indexOf(value.sound) == -1) {
+              sounds_used.push(value.sound);
+            }
+          }
+
+          var conditions = $.parseJSON(value.variation_conditions);
+          $.each(conditions, function (j, condition) {
+            if (condition.mode == 'alert_type') {
+              available_alert_types_ids.push(parseInt(condition.value));
+              return false;
+            }
+          });
+        });
+
+        if (da_debug) debug('available_alert_types_ids: ' + JSON.stringify(available_alert_types_ids));
+
+        settings = alerts_widget_settings.variations[0];
+
+        if (window.opener != null) {
+          $('body').css('background', settings.background_color);
+        }
+
+        if (typeof sound != 'undefined') {
+          sound.donation.destruct();
+        }
+        sound = {
+          'donation': soundManager.createSound({
+            url: settings.sound.substring(0, 8) == 'https://' ? settings.sound : 'https://files.donationalerts.com/uploads/' + settings.sound,
+            onfinish: function () {
+              try {
+                this.setPosition(0);
+                console.log('ended');
+                if (tts_started == 0) {
+                  if (settings.tts_is_enabled == 1) {
+                    if (settings.tts_scenario == 'after_sound') {
+                      ttsStart(current_message);
+                    }
+                  }
+                }
+              } catch (err) {
+                error = 'onended error: ' + err.message;
+              }
+            },
+            onstop: function () {
+              try {
+                this.setPosition(0);
+                console.log('pause');
+                if (tts_started == 0) {
+                  if (settings.tts_is_enabled == 1) {
+                    if (settings.tts_scenario == 'after_sound') {
+                      ttsStart(current_message);
+                    }
+                  }
+                }
+              } catch (err) {
+                error = 'onpause error: ' + err.message;
+              }
+            }
+          })
+        };
+
+        display_duration = settings.display_duration * 1000;
+        tts_volume = settings.tts_volume;
+
+        header_text_style = $.parseJSON((settings.header_text ? settings.header_text : '{}'));
+        message_text_style = $.parseJSON((settings.message_text ? settings.message_text : '{}'));
+
+        window.settings = settings;
+
+        initAlertsWidget();
+
+        if (typeof dPoll != 'undefined') {
+          dPoll.destroy();
+        }
+        dPoll = new pollWidget('.alert-container #poll-alert', '{\"standalone\":false}');
+
+        if (images_used.length > 0) {
+          try {
+            preloadImages(images_used);
+          } catch (err) {
+
+          }
+        }
+        if (sounds_used.length > 0) {
+          try {
+            preloadSounds(sounds_used);
+          } catch (err) {
+
+          }
+        }
+      }
+
+      var audio = document.createElement("audio");
+      var isMP3Supported = (typeof audio.canPlayType === "function" && audio.canPlayType("audio/mpeg") !== "");
+      var isAudioSupported = document.createElement('audio').canPlayType;
+
+      if (isAudioSupported) {
+
+        token = 'WD7WKvBg1w894ib8Skkz';
+
+        a_settings = $.parseJSON('{\"variations\":[{\"entity_id\":48824626,\"user_id\":9585175,\"group_id\":1,\"window_coor_x\":0,\"window_coor_y\":0,\"background_color\":\"#00ff00\",\"volume\":39,\"display_pattern\":\"image_top__text_bottom\",\"sound\":\"sounds\\/9585175\\/Nev_arc_kill_10_ru.mp3.wav\",\"image\":\"images\\/9585175\\/ghoul-ghpul.gif\",\"message_background\":\"rgba(0, 0, 0, 0)\",\"is_temporary_disabled\":0,\"color_1\":\"#000000\",\"color_2\":\"#000000\",\"display_duration\":\"5.00\",\"text_delay\":\"0.00\",\"text_duration\":\"5.00\",\"font_size_1\":0,\"font_size_2\":0,\"header_text\":\"{\\\"font_style\\\":{\\\"font-family\\\":\\\"\\\\\\\"Arial\\\\\\\"\\\",\\\"font-size\\\":\\\"60px\\\",\\\"color\\\":\\\"#FFFFFF\\\",\\\"font-weight\\\":\\\"bold\\\",\\\"font-style\\\":\\\"normal\\\",\\\"text-decoration\\\":\\\"none\\\",\\\"text-transform\\\":\\\"none\\\",\\\"text-shadow\\\":\\\"1px\\\",\\\"text-shadow_color\\\":\\\"rgb(0, 0, 0)\\\",\\\"letter-spacing\\\":\\\"0px\\\",\\\"word-spacing\\\":\\\"0px\\\",\\\"text-align\\\":\\\"center\\\",\\\"vertical-align\\\":\\\"middle\\\",\\\"background-color\\\":\\\"rgba(255, 255, 255, 0)\\\",\\\"border-radius\\\":\\\"0px\\\"},\\\"font_animation\\\":{\\\"text-animation\\\":\\\"none\\\",\\\"text-animation-mode\\\":\\\"letters\\\"}}\",\"message_text\":\"{\\\"font_style\\\":{\\\"font-family\\\":\\\"\\\\\\\"Roboto Condensed\\\\\\\"\\\",\\\"font-size\\\":\\\"50px\\\",\\\"color\\\":\\\"#FFFFFF\\\",\\\"font-weight\\\":\\\"normal\\\",\\\"font-style\\\":\\\"normal\\\",\\\"text-decoration\\\":\\\"none\\\",\\\"text-transform\\\":\\\"none\\\",\\\"text-shadow\\\":\\\"1px\\\",\\\"text-shadow_color\\\":\\\"rgb(0, 0, 0)\\\",\\\"letter-spacing\\\":\\\"0px\\\",\\\"word-spacing\\\":\\\"0px\\\",\\\"text-align\\\":\\\"center\\\",\\\"vertical-align\\\":\\\"middle\\\",\\\"background-color\\\":\\\"rgba(223, 255, 0, 0)\\\",\\\"border-radius\\\":\\\"0px\\\"},\\\"font_animation\\\":{\\\"text-animation\\\":\\\"none\\\",\\\"text-animation-mode\\\":\\\"letters\\\"}}\",\"donation_audio_volume\":50,\"donation_audio_play_scenario\":\"after_sound\",\"donation_audio_playback\":1,\"tts_is_enabled\":1,\"tts_language\":\"ru_RU\",\"tts_scenario\":\"after_sound\",\"tts_volume\":50,\"tts_amount_min\":\"0.00\",\"tts_voice\":\"male,female,25,3,19,\",\"tts_rate\":\"medium\",\"variation_conditions\":\"[{\\\"mode\\\":\\\"alert_type\\\",\\\"value\\\":1},{\\\"mode\\\":\\\"random\\\",\\\"value\\\":3}]\",\"name\":null,\"is_active\":1,\"is_deleted\":0,\"position\":0,\"additional_data\":null,\"header_template\":\"{username} - {amount}!\",\"message_template\":null},{\"entity_id\":48824633,\"user_id\":9585175,\"group_id\":1,\"window_coor_x\":0,\"window_coor_y\":0,\"background_color\":\"#00ff00\",\"volume\":50,\"display_pattern\":\"image_top__text_bottom\",\"sound\":\"sounds\\/2\\/point_2.mp3\",\"image\":\"images\\/2\\/tb_10.gif\",\"message_background\":\"rgba(0, 0, 0, 0)\",\"is_temporary_disabled\":0,\"color_1\":\"#FB8C2B\",\"color_2\":\"#FFFFFF\",\"display_duration\":\"8.50\",\"text_delay\":\"0.00\",\"text_duration\":\"8.50\",\"font_size_1\":60,\"font_size_2\":25,\"header_text\":\"{\\\"font_style\\\":{\\\"font-family\\\":\\\"\\\\\\\"Roboto Condensed\\\\\\\"\\\",\\\"font-size\\\":\\\"60px\\\",\\\"color\\\":\\\"rgb(251, 140, 43)\\\",\\\"font-weight\\\":\\\"bold\\\",\\\"font-style\\\":\\\"normal\\\",\\\"text-decoration\\\":\\\"none\\\",\\\"text-transform\\\":\\\"none\\\",\\\"text-shadow\\\":\\\"1px\\\",\\\"text-shadow_color\\\":\\\"rgb(0, 0, 0)\\\",\\\"letter-spacing\\\":\\\"0px\\\",\\\"word-spacing\\\":\\\"0px\\\",\\\"text-align\\\":\\\"center\\\",\\\"vertical-align\\\":\\\"middle\\\",\\\"background-color\\\":\\\"rgba(255, 255, 255, 0)\\\",\\\"border-radius\\\":\\\"0px\\\"},\\\"font_animation\\\":{\\\"text-animation\\\":\\\"tada\\\",\\\"text-animation-mode\\\":\\\"letters\\\"}}\",\"message_text\":\"{\\\"font_style\\\":{\\\"font-family\\\":\\\"\\\\\\\"Roboto Condensed\\\\\\\"\\\",\\\"font-size\\\":\\\"25px\\\",\\\"color\\\":\\\"rgb(255, 255, 255)\\\",\\\"font-weight\\\":\\\"normal\\\",\\\"font-style\\\":\\\"normal\\\",\\\"text-decoration\\\":\\\"none\\\",\\\"text-transform\\\":\\\"none\\\",\\\"text-shadow\\\":\\\"1px\\\",\\\"text-shadow_color\\\":\\\"rgb(0, 0, 0)\\\",\\\"letter-spacing\\\":\\\"0px\\\",\\\"word-spacing\\\":\\\"0px\\\",\\\"text-align\\\":\\\"center\\\",\\\"vertical-align\\\":\\\"middle\\\",\\\"background-color\\\":\\\"rgba(223, 255, 0, 0)\\\",\\\"border-radius\\\":\\\"0px\\\"},\\\"font_animation\\\":{\\\"text-animation\\\":\\\"none\\\",\\\"text-animation-mode\\\":\\\"letters\\\"}}\",\"donation_audio_volume\":50,\"donation_audio_play_scenario\":\"after_sound\",\"donation_audio_playback\":1,\"tts_is_enabled\":1,\"tts_language\":\"ru_RU\",\"tts_scenario\":\"after_sound\",\"tts_volume\":50,\"tts_amount_min\":\"0.00\",\"tts_voice\":\"male,female,25,3,19,\",\"tts_rate\":\"medium\",\"variation_conditions\":\"[{\\\"mode\\\":\\\"alert_type\\\",\\\"value\\\":11},{\\\"mode\\\":\\\"bits_amount_equal_or_greater_than\\\",\\\"value\\\":1}]\",\"name\":\"Twitch Bits (1-100)\",\"is_active\":1,\"is_deleted\":0,\"position\":0,\"additional_data\":null,\"header_template\":\"{username} - {amount} Bits!\",\"message_template\":null},{\"entity_id\":48824634,\"user_id\":9585175,\"group_id\":1,\"window_coor_x\":0,\"window_coor_y\":0,\"background_color\":\"#00ff00\",\"volume\":50,\"display_pattern\":\"image_top__text_bottom\",\"sound\":\"sounds\\/2\\/point_2.mp3\",\"image\":\"images\\/2\\/tb_100.gif\",\"message_background\":\"rgba(0, 0, 0, 0)\",\"is_temporary_disabled\":0,\"color_1\":\"#FB8C2B\",\"color_2\":\"#FFFFFF\",\"display_duration\":\"8.50\",\"text_delay\":\"0.00\",\"text_duration\":\"8.50\",\"font_size_1\":60,\"font_size_2\":25,\"header_text\":\"{\\\"font_style\\\":{\\\"font-family\\\":\\\"\\\\\\\"Roboto Condensed\\\\\\\"\\\",\\\"font-size\\\":\\\"60px\\\",\\\"color\\\":\\\"rgb(251, 140, 43)\\\",\\\"font-weight\\\":\\\"bold\\\",\\\"font-style\\\":\\\"normal\\\",\\\"text-decoration\\\":\\\"none\\\",\\\"text-transform\\\":\\\"none\\\",\\\"text-shadow\\\":\\\"1px\\\",\\\"text-shadow_color\\\":\\\"rgb(0, 0, 0)\\\",\\\"letter-spacing\\\":\\\"0px\\\",\\\"word-spacing\\\":\\\"0px\\\",\\\"text-align\\\":\\\"center\\\",\\\"vertical-align\\\":\\\"middle\\\",\\\"background-color\\\":\\\"rgba(255, 255, 255, 0)\\\",\\\"border-radius\\\":\\\"0px\\\"},\\\"font_animation\\\":{\\\"text-animation\\\":\\\"tada\\\",\\\"text-animation-mode\\\":\\\"letters\\\"}}\",\"message_text\":\"{\\\"font_style\\\":{\\\"font-family\\\":\\\"\\\\\\\"Roboto Condensed\\\\\\\"\\\",\\\"font-size\\\":\\\"25px\\\",\\\"color\\\":\\\"rgb(255, 255, 255)\\\",\\\"font-weight\\\":\\\"normal\\\",\\\"font-style\\\":\\\"normal\\\",\\\"text-decoration\\\":\\\"none\\\",\\\"text-transform\\\":\\\"none\\\",\\\"text-shadow\\\":\\\"1px\\\",\\\"text-shadow_color\\\":\\\"rgb(0, 0, 0)\\\",\\\"letter-spacing\\\":\\\"0px\\\",\\\"word-spacing\\\":\\\"0px\\\",\\\"text-align\\\":\\\"center\\\",\\\"vertical-align\\\":\\\"middle\\\",\\\"background-color\\\":\\\"rgba(223, 255, 0, 0)\\\",\\\"border-radius\\\":\\\"0px\\\"},\\\"font_animation\\\":{\\\"text-animation\\\":\\\"none\\\",\\\"text-animation-mode\\\":\\\"letters\\\"}}\",\"donation_audio_volume\":50,\"donation_audio_play_scenario\":\"after_sound\",\"donation_audio_playback\":1,\"tts_is_enabled\":1,\"tts_language\":\"ru_RU\",\"tts_scenario\":\"after_sound\",\"tts_volume\":50,\"tts_amount_min\":\"0.00\",\"tts_voice\":\"male,female,25,3,19,\",\"tts_rate\":\"medium\",\"variation_conditions\":\"[{\\\"mode\\\":\\\"alert_type\\\",\\\"value\\\":11},{\\\"mode\\\":\\\"bits_amount_equal_or_greater_than\\\",\\\"value\\\":100}]\",\"name\":\"Twitch Bits (100-1000)\",\"is_active\":1,\"is_deleted\":0,\"position\":0,\"additional_data\":null,\"header_template\":\"{username} - {amount} Bits!\",\"message_template\":null},{\"entity_id\":48824635,\"user_id\":9585175,\"group_id\":1,\"window_coor_x\":0,\"window_coor_y\":0,\"background_color\":\"#00ff00\",\"volume\":50,\"display_pattern\":\"image_top__text_bottom\",\"sound\":\"sounds\\/2\\/point_2.mp3\",\"image\":\"images\\/2\\/tb_1000.gif\",\"message_background\":\"rgba(0, 0, 0, 0)\",\"is_temporary_disabled\":0,\"color_1\":\"#FB8C2B\",\"color_2\":\"#FFFFFF\",\"display_duration\":\"8.50\",\"text_delay\":\"0.00\",\"text_duration\":\"8.50\",\"font_size_1\":60,\"font_size_2\":25,\"header_text\":\"{\\\"font_style\\\":{\\\"font-family\\\":\\\"\\\\\\\"Roboto Condensed\\\\\\\"\\\",\\\"font-size\\\":\\\"60px\\\",\\\"color\\\":\\\"rgb(251, 140, 43)\\\",\\\"font-weight\\\":\\\"bold\\\",\\\"font-style\\\":\\\"normal\\\",\\\"text-decoration\\\":\\\"none\\\",\\\"text-transform\\\":\\\"none\\\",\\\"text-shadow\\\":\\\"1px\\\",\\\"text-shadow_color\\\":\\\"rgb(0, 0, 0)\\\",\\\"letter-spacing\\\":\\\"0px\\\",\\\"word-spacing\\\":\\\"0px\\\",\\\"text-align\\\":\\\"center\\\",\\\"vertical-align\\\":\\\"middle\\\",\\\"background-color\\\":\\\"rgba(255, 255, 255, 0)\\\",\\\"border-radius\\\":\\\"0px\\\"},\\\"font_animation\\\":{\\\"text-animation\\\":\\\"tada\\\",\\\"text-animation-mode\\\":\\\"letters\\\"}}\",\"message_text\":\"{\\\"font_style\\\":{\\\"font-family\\\":\\\"\\\\\\\"Roboto Condensed\\\\\\\"\\\",\\\"font-size\\\":\\\"25px\\\",\\\"color\\\":\\\"rgb(255, 255, 255)\\\",\\\"font-weight\\\":\\\"normal\\\",\\\"font-style\\\":\\\"normal\\\",\\\"text-decoration\\\":\\\"none\\\",\\\"text-transform\\\":\\\"none\\\",\\\"text-shadow\\\":\\\"1px\\\",\\\"text-shadow_color\\\":\\\"rgb(0, 0, 0)\\\",\\\"letter-spacing\\\":\\\"0px\\\",\\\"word-spacing\\\":\\\"0px\\\",\\\"text-align\\\":\\\"center\\\",\\\"vertical-align\\\":\\\"middle\\\",\\\"background-color\\\":\\\"rgba(223, 255, 0, 0)\\\",\\\"border-radius\\\":\\\"0px\\\"},\\\"font_animation\\\":{\\\"text-animation\\\":\\\"none\\\",\\\"text-animation-mode\\\":\\\"letters\\\"}}\",\"donation_audio_volume\":50,\"donation_audio_play_scenario\":\"after_sound\",\"donation_audio_playback\":1,\"tts_is_enabled\":1,\"tts_language\":\"ru_RU\",\"tts_scenario\":\"after_sound\",\"tts_volume\":50,\"tts_amount_min\":\"0.00\",\"tts_voice\":\"male,female,25,3,19,\",\"tts_rate\":\"medium\",\"variation_conditions\":\"[{\\\"mode\\\":\\\"alert_type\\\",\\\"value\\\":11},{\\\"mode\\\":\\\"bits_amount_equal_or_greater_than\\\",\\\"value\\\":1000}]\",\"name\":\"Twitch Bits (1000-5000)\",\"is_active\":1,\"is_deleted\":0,\"position\":0,\"additional_data\":null,\"header_template\":\"{username} - {amount} Bits!\",\"message_template\":null},{\"entity_id\":48824636,\"user_id\":9585175,\"group_id\":1,\"window_coor_x\":0,\"window_coor_y\":0,\"background_color\":\"#00ff00\",\"volume\":50,\"display_pattern\":\"image_top__text_bottom\",\"sound\":\"sounds\\/2\\/point_2.mp3\",\"image\":\"images\\/2\\/tb_5000.gif\",\"message_background\":\"rgba(0, 0, 0, 0)\",\"is_temporary_disabled\":0,\"color_1\":\"#FB8C2B\",\"color_2\":\"#FFFFFF\",\"display_duration\":\"8.50\",\"text_delay\":\"0.00\",\"text_duration\":\"8.50\",\"font_size_1\":60,\"font_size_2\":25,\"header_text\":\"{\\\"font_style\\\":{\\\"font-family\\\":\\\"\\\\\\\"Roboto Condensed\\\\\\\"\\\",\\\"font-size\\\":\\\"60px\\\",\\\"color\\\":\\\"rgb(251, 140, 43)\\\",\\\"font-weight\\\":\\\"bold\\\",\\\"font-style\\\":\\\"normal\\\",\\\"text-decoration\\\":\\\"none\\\",\\\"text-transform\\\":\\\"none\\\",\\\"text-shadow\\\":\\\"1px\\\",\\\"text-shadow_color\\\":\\\"rgb(0, 0, 0)\\\",\\\"letter-spacing\\\":\\\"0px\\\",\\\"word-spacing\\\":\\\"0px\\\",\\\"text-align\\\":\\\"center\\\",\\\"vertical-align\\\":\\\"middle\\\",\\\"background-color\\\":\\\"rgba(255, 255, 255, 0)\\\",\\\"border-radius\\\":\\\"0px\\\"},\\\"font_animation\\\":{\\\"text-animation\\\":\\\"tada\\\",\\\"text-animation-mode\\\":\\\"letters\\\"}}\",\"message_text\":\"{\\\"font_style\\\":{\\\"font-family\\\":\\\"\\\\\\\"Roboto Condensed\\\\\\\"\\\",\\\"font-size\\\":\\\"25px\\\",\\\"color\\\":\\\"rgb(255, 255, 255)\\\",\\\"font-weight\\\":\\\"normal\\\",\\\"font-style\\\":\\\"normal\\\",\\\"text-decoration\\\":\\\"none\\\",\\\"text-transform\\\":\\\"none\\\",\\\"text-shadow\\\":\\\"1px\\\",\\\"text-shadow_color\\\":\\\"rgb(0, 0, 0)\\\",\\\"letter-spacing\\\":\\\"0px\\\",\\\"word-spacing\\\":\\\"0px\\\",\\\"text-align\\\":\\\"center\\\",\\\"vertical-align\\\":\\\"middle\\\",\\\"background-color\\\":\\\"rgba(223, 255, 0, 0)\\\",\\\"border-radius\\\":\\\"0px\\\"},\\\"font_animation\\\":{\\\"text-animation\\\":\\\"none\\\",\\\"text-animation-mode\\\":\\\"letters\\\"}}\",\"donation_audio_volume\":50,\"donation_audio_play_scenario\":\"after_sound\",\"donation_audio_playback\":1,\"tts_is_enabled\":1,\"tts_language\":\"ru_RU\",\"tts_scenario\":\"after_sound\",\"tts_volume\":50,\"tts_amount_min\":\"0.00\",\"tts_voice\":\"male,female,25,3,19,\",\"tts_rate\":\"medium\",\"variation_conditions\":\"[{\\\"mode\\\":\\\"alert_type\\\",\\\"value\\\":11},{\\\"mode\\\":\\\"bits_amount_equal_or_greater_than\\\",\\\"value\\\":5000}]\",\"name\":\"Twitch Bits (5000-10000)\",\"is_active\":1,\"is_deleted\":0,\"position\":0,\"additional_data\":null,\"header_template\":\"{username} - {amount} Bits!\",\"message_template\":null},{\"entity_id\":48824637,\"user_id\":9585175,\"group_id\":1,\"window_coor_x\":0,\"window_coor_y\":0,\"background_color\":\"#00ff00\",\"volume\":50,\"display_pattern\":\"image_top__text_bottom\",\"sound\":\"sounds\\/2\\/point_2.mp3\",\"image\":\"images\\/2\\/tb_10000.gif\",\"message_background\":\"rgba(0, 0, 0, 0)\",\"is_temporary_disabled\":0,\"color_1\":\"#FB8C2B\",\"color_2\":\"#FFFFFF\",\"display_duration\":\"8.50\",\"text_delay\":\"0.00\",\"text_duration\":\"8.50\",\"font_size_1\":60,\"font_size_2\":25,\"header_text\":\"{\\\"font_style\\\":{\\\"font-family\\\":\\\"\\\\\\\"Roboto Condensed\\\\\\\"\\\",\\\"font-size\\\":\\\"60px\\\",\\\"color\\\":\\\"rgb(251, 140, 43)\\\",\\\"font-weight\\\":\\\"bold\\\",\\\"font-style\\\":\\\"normal\\\",\\\"text-decoration\\\":\\\"none\\\",\\\"text-transform\\\":\\\"none\\\",\\\"text-shadow\\\":\\\"1px\\\",\\\"text-shadow_color\\\":\\\"rgb(0, 0, 0)\\\",\\\"letter-spacing\\\":\\\"0px\\\",\\\"word-spacing\\\":\\\"0px\\\",\\\"text-align\\\":\\\"center\\\",\\\"vertical-align\\\":\\\"middle\\\",\\\"background-color\\\":\\\"rgba(255, 255, 255, 0)\\\",\\\"border-radius\\\":\\\"0px\\\"},\\\"font_animation\\\":{\\\"text-animation\\\":\\\"tada\\\",\\\"text-animation-mode\\\":\\\"letters\\\"}}\",\"message_text\":\"{\\\"font_style\\\":{\\\"font-family\\\":\\\"\\\\\\\"Roboto Condensed\\\\\\\"\\\",\\\"font-size\\\":\\\"25px\\\",\\\"color\\\":\\\"rgb(255, 255, 255)\\\",\\\"font-weight\\\":\\\"normal\\\",\\\"font-style\\\":\\\"normal\\\",\\\"text-decoration\\\":\\\"none\\\",\\\"text-transform\\\":\\\"none\\\",\\\"text-shadow\\\":\\\"1px\\\",\\\"text-shadow_color\\\":\\\"rgb(0, 0, 0)\\\",\\\"letter-spacing\\\":\\\"0px\\\",\\\"word-spacing\\\":\\\"0px\\\",\\\"text-align\\\":\\\"center\\\",\\\"vertical-align\\\":\\\"middle\\\",\\\"background-color\\\":\\\"rgba(223, 255, 0, 0)\\\",\\\"border-radius\\\":\\\"0px\\\"},\\\"font_animation\\\":{\\\"text-animation\\\":\\\"none\\\",\\\"text-animation-mode\\\":\\\"letters\\\"}}\",\"donation_audio_volume\":50,\"donation_audio_play_scenario\":\"after_sound\",\"donation_audio_playback\":1,\"tts_is_enabled\":1,\"tts_language\":\"ru_RU\",\"tts_scenario\":\"after_sound\",\"tts_volume\":50,\"tts_amount_min\":\"0.00\",\"tts_voice\":\"male,female,25,3,19,\",\"tts_rate\":\"medium\",\"variation_conditions\":\"[{\\\"mode\\\":\\\"alert_type\\\",\\\"value\\\":11},{\\\"mode\\\":\\\"bits_amount_equal_or_greater_than\\\",\\\"value\\\":10000}]\",\"name\":\"Twitch Bits (10000-100000)\",\"is_active\":1,\"is_deleted\":0,\"position\":0,\"additional_data\":null,\"header_template\":\"{username} - {amount} Bits!\",\"message_template\":null},{\"entity_id\":48824638,\"user_id\":9585175,\"group_id\":1,\"window_coor_x\":0,\"window_coor_y\":0,\"background_color\":\"#00ff00\",\"volume\":50,\"display_pattern\":\"image_top__text_bottom\",\"sound\":\"sounds\\/2\\/point_2.mp3\",\"image\":\"images\\/2\\/tb_100000.gif\",\"message_background\":\"rgba(0, 0, 0, 0)\",\"is_temporary_disabled\":0,\"color_1\":\"#FB8C2B\",\"color_2\":\"#FFFFFF\",\"display_duration\":\"8.50\",\"text_delay\":\"0.00\",\"text_duration\":\"8.50\",\"font_size_1\":60,\"font_size_2\":25,\"header_text\":\"{\\\"font_style\\\":{\\\"font-family\\\":\\\"\\\\\\\"Roboto Condensed\\\\\\\"\\\",\\\"font-size\\\":\\\"60px\\\",\\\"color\\\":\\\"rgb(251, 140, 43)\\\",\\\"font-weight\\\":\\\"bold\\\",\\\"font-style\\\":\\\"normal\\\",\\\"text-decoration\\\":\\\"none\\\",\\\"text-transform\\\":\\\"none\\\",\\\"text-shadow\\\":\\\"1px\\\",\\\"text-shadow_color\\\":\\\"rgb(0, 0, 0)\\\",\\\"letter-spacing\\\":\\\"0px\\\",\\\"word-spacing\\\":\\\"0px\\\",\\\"text-align\\\":\\\"center\\\",\\\"vertical-align\\\":\\\"middle\\\",\\\"background-color\\\":\\\"rgba(255, 255, 255, 0)\\\",\\\"border-radius\\\":\\\"0px\\\"},\\\"font_animation\\\":{\\\"text-animation\\\":\\\"tada\\\",\\\"text-animation-mode\\\":\\\"letters\\\"}}\",\"message_text\":\"{\\\"font_style\\\":{\\\"font-family\\\":\\\"\\\\\\\"Roboto Condensed\\\\\\\"\\\",\\\"font-size\\\":\\\"25px\\\",\\\"color\\\":\\\"rgb(255, 255, 255)\\\",\\\"font-weight\\\":\\\"normal\\\",\\\"font-style\\\":\\\"normal\\\",\\\"text-decoration\\\":\\\"none\\\",\\\"text-transform\\\":\\\"none\\\",\\\"text-shadow\\\":\\\"1px\\\",\\\"text-shadow_color\\\":\\\"rgb(0, 0, 0)\\\",\\\"letter-spacing\\\":\\\"0px\\\",\\\"word-spacing\\\":\\\"0px\\\",\\\"text-align\\\":\\\"center\\\",\\\"vertical-align\\\":\\\"middle\\\",\\\"background-color\\\":\\\"rgba(223, 255, 0, 0)\\\",\\\"border-radius\\\":\\\"0px\\\"},\\\"font_animation\\\":{\\\"text-animation\\\":\\\"none\\\",\\\"text-animation-mode\\\":\\\"letters\\\"}}\",\"donation_audio_volume\":50,\"donation_audio_play_scenario\":\"after_sound\",\"donation_audio_playback\":1,\"tts_is_enabled\":1,\"tts_language\":\"ru_RU\",\"tts_scenario\":\"after_sound\",\"tts_volume\":50,\"tts_amount_min\":\"0.00\",\"tts_voice\":\"male,female,25,3,19,\",\"tts_rate\":\"medium\",\"variation_conditions\":\"[{\\\"mode\\\":\\\"alert_type\\\",\\\"value\\\":11},{\\\"mode\\\":\\\"bits_amount_equal_or_greater_than\\\",\\\"value\\\":100000}]\",\"name\":\"Twitch Bits (\\u043e\\u0442 100000)\",\"is_active\":1,\"is_deleted\":0,\"position\":0,\"additional_data\":null,\"header_template\":\"{username} - {amount} Bits!\",\"message_template\":null},{\"entity_id\":48824642,\"user_id\":9585175,\"group_id\":1,\"window_coor_x\":0,\"window_coor_y\":0,\"background_color\":\"#00ff00\",\"volume\":50,\"display_pattern\":\"image_top__text_bottom\",\"sound\":\"sounds\\/2\\/point_2.mp3\",\"image\":\"images\\/2\\/cat_3.gif\",\"message_background\":\"rgba(0, 0, 0, 0)\",\"is_temporary_disabled\":0,\"color_1\":\"#FB8C2B\",\"color_2\":\"#FFFFFF\",\"display_duration\":\"8.50\",\"text_delay\":\"0.00\",\"text_duration\":\"8.50\",\"font_size_1\":60,\"font_size_2\":25,\"header_text\":\"{\\\"font_style\\\":{\\\"font-family\\\":\\\"\\\\\\\"Roboto Condensed\\\\\\\"\\\",\\\"font-size\\\":\\\"60px\\\",\\\"color\\\":\\\"rgb(251, 140, 43)\\\",\\\"font-weight\\\":\\\"bold\\\",\\\"font-style\\\":\\\"normal\\\",\\\"text-decoration\\\":\\\"none\\\",\\\"text-transform\\\":\\\"none\\\",\\\"text-shadow\\\":\\\"1px\\\",\\\"text-shadow_color\\\":\\\"rgb(0, 0, 0)\\\",\\\"letter-spacing\\\":\\\"0px\\\",\\\"word-spacing\\\":\\\"0px\\\",\\\"text-align\\\":\\\"center\\\",\\\"vertical-align\\\":\\\"middle\\\",\\\"background-color\\\":\\\"rgba(255, 255, 255, 0)\\\",\\\"border-radius\\\":\\\"0px\\\"},\\\"font_animation\\\":{\\\"text-animation\\\":\\\"tada\\\",\\\"text-animation-mode\\\":\\\"letters\\\"}}\",\"message_text\":\"{\\\"font_style\\\":{\\\"font-family\\\":\\\"\\\\\\\"Roboto Condensed\\\\\\\"\\\",\\\"font-size\\\":\\\"25px\\\",\\\"color\\\":\\\"rgb(255, 255, 255)\\\",\\\"font-weight\\\":\\\"normal\\\",\\\"font-style\\\":\\\"normal\\\",\\\"text-decoration\\\":\\\"none\\\",\\\"text-transform\\\":\\\"none\\\",\\\"text-shadow\\\":\\\"1px\\\",\\\"text-shadow_color\\\":\\\"rgb(0, 0, 0)\\\",\\\"letter-spacing\\\":\\\"0px\\\",\\\"word-spacing\\\":\\\"0px\\\",\\\"text-align\\\":\\\"center\\\",\\\"vertical-align\\\":\\\"middle\\\",\\\"background-color\\\":\\\"rgba(223, 255, 0, 0)\\\",\\\"border-radius\\\":\\\"0px\\\"},\\\"font_animation\\\":{\\\"text-animation\\\":\\\"none\\\",\\\"text-animation-mode\\\":\\\"letters\\\"}}\",\"donation_audio_volume\":50,\"donation_audio_play_scenario\":\"after_sound\",\"donation_audio_playback\":1,\"tts_is_enabled\":1,\"tts_language\":\"ru_RU\",\"tts_scenario\":\"after_sound\",\"tts_volume\":50,\"tts_amount_min\":\"0.00\",\"tts_voice\":\"male,female,25,3,19,\",\"tts_rate\":\"medium\",\"variation_conditions\":\"[{\\\"mode\\\":\\\"alert_type\\\",\\\"value\\\":16},{\\\"mode\\\":\\\"random\\\",\\\"value\\\":3}]\",\"name\":\"\\u041f\\u043e\\u0434\\u043f\\u0438\\u0441\\u043a\\u0438 \\u043f\\u043e\\u0434\\u0430\\u0440\\u0435\\u043d\\u043d\\u044b\\u0435 \\u043a\\u0430\\u043d\\u0430\\u043b\\u0443\",\"is_active\":1,\"is_deleted\":0,\"position\":0,\"additional_data\":null,\"header_template\":\"{username} \\u0442\\u043e\\u043b\\u044c\\u043a\\u043e \\u0447\\u0442\\u043e \\u043f\\u043e\\u0434\\u0430\\u0440\\u0438\\u043b {subscriptions_amount}!\",\"message_template\":null},{\"entity_id\":48824643,\"user_id\":9585175,\"group_id\":1,\"window_coor_x\":0,\"window_coor_y\":0,\"background_color\":\"#00ff00\",\"volume\":50,\"display_pattern\":\"image_top__text_bottom\",\"sound\":\"sounds\\/2\\/point_2.mp3\",\"image\":\"images\\/2\\/heart.gif\",\"message_background\":\"rgba(0, 0, 0, 0)\",\"is_temporary_disabled\":0,\"color_1\":\"#FB8C2B\",\"color_2\":\"#FFFFFF\",\"display_duration\":\"8.50\",\"text_delay\":\"0.00\",\"text_duration\":\"8.50\",\"font_size_1\":60,\"font_size_2\":25,\"header_text\":\"{\\\"font_style\\\":{\\\"font-family\\\":\\\"\\\\\\\"Roboto Condensed\\\\\\\"\\\",\\\"font-size\\\":\\\"60px\\\",\\\"color\\\":\\\"rgb(251, 140, 43)\\\",\\\"font-weight\\\":\\\"bold\\\",\\\"font-style\\\":\\\"normal\\\",\\\"text-decoration\\\":\\\"none\\\",\\\"text-transform\\\":\\\"none\\\",\\\"text-shadow\\\":\\\"1px\\\",\\\"text-shadow_color\\\":\\\"rgb(0, 0, 0)\\\",\\\"letter-spacing\\\":\\\"0px\\\",\\\"word-spacing\\\":\\\"0px\\\",\\\"text-align\\\":\\\"center\\\",\\\"vertical-align\\\":\\\"middle\\\",\\\"background-color\\\":\\\"rgba(255, 255, 255, 0)\\\",\\\"border-radius\\\":\\\"0px\\\"},\\\"font_animation\\\":{\\\"text-animation\\\":\\\"tada\\\",\\\"text-animation-mode\\\":\\\"letters\\\"}}\",\"message_text\":\"{\\\"font_style\\\":{\\\"font-family\\\":\\\"\\\\\\\"Roboto Condensed\\\\\\\"\\\",\\\"font-size\\\":\\\"25px\\\",\\\"color\\\":\\\"rgb(255, 255, 255)\\\",\\\"font-weight\\\":\\\"normal\\\",\\\"font-style\\\":\\\"normal\\\",\\\"text-decoration\\\":\\\"none\\\",\\\"text-transform\\\":\\\"none\\\",\\\"text-shadow\\\":\\\"1px\\\",\\\"text-shadow_color\\\":\\\"rgb(0, 0, 0)\\\",\\\"letter-spacing\\\":\\\"0px\\\",\\\"word-spacing\\\":\\\"0px\\\",\\\"text-align\\\":\\\"center\\\",\\\"vertical-align\\\":\\\"middle\\\",\\\"background-color\\\":\\\"rgba(223, 255, 0, 0)\\\",\\\"border-radius\\\":\\\"0px\\\"},\\\"font_animation\\\":{\\\"text-animation\\\":\\\"none\\\",\\\"text-animation-mode\\\":\\\"letters\\\"}}\",\"donation_audio_volume\":50,\"donation_audio_play_scenario\":\"after_sound\",\"donation_audio_playback\":1,\"tts_is_enabled\":1,\"tts_language\":\"ru_RU\",\"tts_scenario\":\"after_sound\",\"tts_volume\":50,\"tts_amount_min\":\"0.00\",\"tts_voice\":\"male,female,25,3,19,\",\"tts_rate\":\"medium\",\"variation_conditions\":\"[{\\\"mode\\\":\\\"alert_type\\\",\\\"value\\\":18},{\\\"mode\\\":\\\"random\\\",\\\"value\\\":3}]\",\"name\":\"Twitch \\u0445\\u043e\\u0441\\u0442\\u044b\",\"is_active\":1,\"is_deleted\":0,\"position\":0,\"additional_data\":null,\"header_template\":\"{username} \\u0440\\u0430\\u0437\\u043c\\u0435\\u0449\\u0430\\u0435\\u0442 \\u043a\\u0430\\u043d\\u0430\\u043b \\u0441 {viewers_amount}!\",\"message_template\":null},{\"entity_id\":48824644,\"user_id\":9585175,\"group_id\":1,\"window_coor_x\":0,\"window_coor_y\":0,\"background_color\":\"#00ff00\",\"volume\":50,\"display_pattern\":\"image_top__text_bottom\",\"sound\":\"sounds\\/2\\/point_2.mp3\",\"image\":\"images\\/2\\/heart.gif\",\"message_background\":\"rgba(0, 0, 0, 0)\",\"is_temporary_disabled\":0,\"color_1\":\"#FB8C2B\",\"color_2\":\"#FFFFFF\",\"display_duration\":\"8.50\",\"text_delay\":\"0.00\",\"text_duration\":\"8.50\",\"font_size_1\":60,\"font_size_2\":25,\"header_text\":\"{\\\"font_style\\\":{\\\"font-family\\\":\\\"\\\\\\\"Roboto Condensed\\\\\\\"\\\",\\\"font-size\\\":\\\"60px\\\",\\\"color\\\":\\\"rgb(251, 140, 43)\\\",\\\"font-weight\\\":\\\"bold\\\",\\\"font-style\\\":\\\"normal\\\",\\\"text-decoration\\\":\\\"none\\\",\\\"text-transform\\\":\\\"none\\\",\\\"text-shadow\\\":\\\"1px\\\",\\\"text-shadow_color\\\":\\\"rgb(0, 0, 0)\\\",\\\"letter-spacing\\\":\\\"0px\\\",\\\"word-spacing\\\":\\\"0px\\\",\\\"text-align\\\":\\\"center\\\",\\\"vertical-align\\\":\\\"middle\\\",\\\"background-color\\\":\\\"rgba(255, 255, 255, 0)\\\",\\\"border-radius\\\":\\\"0px\\\"},\\\"font_animation\\\":{\\\"text-animation\\\":\\\"tada\\\",\\\"text-animation-mode\\\":\\\"letters\\\"}}\",\"message_text\":\"{\\\"font_style\\\":{\\\"font-family\\\":\\\"\\\\\\\"Roboto Condensed\\\\\\\"\\\",\\\"font-size\\\":\\\"25px\\\",\\\"color\\\":\\\"rgb(255, 255, 255)\\\",\\\"font-weight\\\":\\\"normal\\\",\\\"font-style\\\":\\\"normal\\\",\\\"text-decoration\\\":\\\"none\\\",\\\"text-transform\\\":\\\"none\\\",\\\"text-shadow\\\":\\\"1px\\\",\\\"text-shadow_color\\\":\\\"rgb(0, 0, 0)\\\",\\\"letter-spacing\\\":\\\"0px\\\",\\\"word-spacing\\\":\\\"0px\\\",\\\"text-align\\\":\\\"center\\\",\\\"vertical-align\\\":\\\"middle\\\",\\\"background-color\\\":\\\"rgba(223, 255, 0, 0)\\\",\\\"border-radius\\\":\\\"0px\\\"},\\\"font_animation\\\":{\\\"text-animation\\\":\\\"none\\\",\\\"text-animation-mode\\\":\\\"letters\\\"}}\",\"donation_audio_volume\":50,\"donation_audio_play_scenario\":\"after_sound\",\"donation_audio_playback\":1,\"tts_is_enabled\":1,\"tts_language\":\"ru_RU\",\"tts_scenario\":\"after_sound\",\"tts_volume\":50,\"tts_amount_min\":\"0.00\",\"tts_voice\":\"male,female,25,3,19,\",\"tts_rate\":\"medium\",\"variation_conditions\":\"[{\\\"mode\\\":\\\"alert_type\\\",\\\"value\\\":17},{\\\"mode\\\":\\\"random\\\",\\\"value\\\":3}]\",\"name\":\"Twitch \\u0440\\u0435\\u0439\\u0434\\u044b\",\"is_active\":1,\"is_deleted\":0,\"position\":0,\"additional_data\":null,\"header_template\":\"{username} \\u0440\\u0435\\u0439\\u0434\\u0438\\u0442 \\u043a\\u0430\\u043d\\u0430\\u043b \\u0441 {viewers_amount}!\",\"message_template\":null},{\"entity_id\":48824630,\"user_id\":9585175,\"group_id\":2,\"window_coor_x\":0,\"window_coor_y\":0,\"background_color\":\"#00ff00\",\"volume\":2,\"display_pattern\":\"image_top__text_bottom\",\"sound\":\"sounds\\/9585175\\/hatsune-miku-weeeeeeee.mp3\",\"image\":\"\",\"message_background\":\"rgba(0, 0, 0, 0)\",\"is_temporary_disabled\":0,\"color_1\":\"#000000\",\"color_2\":\"#000000\",\"display_duration\":\"4.00\",\"text_delay\":\"0.00\",\"text_duration\":\"3.00\",\"font_size_1\":0,\"font_size_2\":0,\"header_text\":\"{\\\"font_style\\\":{\\\"font-family\\\":\\\"\\\\\\\"Times New Roman\\\\\\\"\\\",\\\"font-size\\\":\\\"60px\\\",\\\"color\\\":\\\"#5DAFFF\\\",\\\"font-weight\\\":\\\"bold\\\",\\\"font-style\\\":\\\"normal\\\",\\\"text-decoration\\\":\\\"none\\\",\\\"text-transform\\\":\\\"none\\\",\\\"text-shadow\\\":\\\"1px\\\",\\\"text-shadow_color\\\":\\\"rgb(0, 0, 0)\\\",\\\"letter-spacing\\\":\\\"0px\\\",\\\"word-spacing\\\":\\\"1px\\\",\\\"text-align\\\":\\\"center\\\",\\\"vertical-align\\\":\\\"middle\\\",\\\"background-color\\\":\\\"rgba(255, 255, 255, 0)\\\",\\\"border-radius\\\":\\\"0px\\\"},\\\"font_animation\\\":{\\\"text-animation\\\":\\\"none\\\",\\\"text-animation-mode\\\":\\\"letters\\\"}}\",\"message_text\":\"{\\\"font_style\\\":{\\\"font-family\\\":\\\"\\\\\\\"Times New Roman\\\\\\\"\\\",\\\"font-size\\\":\\\"25px\\\",\\\"color\\\":\\\"rgb(255, 255, 255)\\\",\\\"font-weight\\\":\\\"normal\\\",\\\"font-style\\\":\\\"normal\\\",\\\"text-decoration\\\":\\\"none\\\",\\\"text-transform\\\":\\\"none\\\",\\\"text-shadow\\\":\\\"1px\\\",\\\"text-shadow_color\\\":\\\"rgb(0, 0, 0)\\\",\\\"letter-spacing\\\":\\\"0px\\\",\\\"word-spacing\\\":\\\"0px\\\",\\\"text-align\\\":\\\"center\\\",\\\"vertical-align\\\":\\\"middle\\\",\\\"background-color\\\":\\\"rgba(223, 255, 0, 0)\\\",\\\"border-radius\\\":\\\"0px\\\"},\\\"font_animation\\\":{\\\"text-animation\\\":\\\"none\\\",\\\"text-animation-mode\\\":\\\"letters\\\"}}\",\"donation_audio_volume\":50,\"donation_audio_play_scenario\":\"after_sound\",\"donation_audio_playback\":1,\"tts_is_enabled\":1,\"tts_language\":\"ru_RU\",\"tts_scenario\":\"after_sound\",\"tts_volume\":50,\"tts_amount_min\":\"0.00\",\"tts_voice\":\"male,female,25,3,19,\",\"tts_rate\":\"medium\",\"variation_conditions\":\"[{\\\"mode\\\":\\\"alert_type\\\",\\\"value\\\":\\\"6\\\"},{\\\"mode\\\":\\\"random\\\",\\\"value\\\":3}]\",\"name\":\"\\u0411\\u0435\\u0441\\u043f\\u043b\\u0430\\u0442\\u043d\\u044b\\u0435 \\u043f\\u043e\\u0434\\u043f\\u0438\\u0441\\u0447\\u0438\\u043a\\u0438 Twitch\",\"is_active\":1,\"is_deleted\":0,\"position\":0,\"additional_data\":null,\"header_template\":\"{username} \\u043f\\u043e\\u0434\\u043f\\u0438\\u0441\\u044f\\u043b\\u0441\\u044f\",\"message_template\":null},{\"entity_id\":48824631,\"user_id\":9585175,\"group_id\":2,\"window_coor_x\":0,\"window_coor_y\":0,\"background_color\":\"#00ff00\",\"volume\":50,\"display_pattern\":\"image_top__text_bottom\",\"sound\":\"sounds\\/2\\/point_2.mp3\",\"image\":\"images\\/2\\/star.gif\",\"message_background\":\"rgba(0, 0, 0, 0)\",\"is_temporary_disabled\":0,\"color_1\":\"#FB8C2B\",\"color_2\":\"#FFFFFF\",\"display_duration\":\"8.50\",\"text_delay\":\"0.00\",\"text_duration\":\"8.50\",\"font_size_1\":60,\"font_size_2\":25,\"header_text\":\"{\\\"font_style\\\":{\\\"font-family\\\":\\\"\\\\\\\"Roboto Condensed\\\\\\\"\\\",\\\"font-size\\\":\\\"60px\\\",\\\"color\\\":\\\"rgb(251, 140, 43)\\\",\\\"font-weight\\\":\\\"bold\\\",\\\"font-style\\\":\\\"normal\\\",\\\"text-decoration\\\":\\\"none\\\",\\\"text-transform\\\":\\\"none\\\",\\\"text-shadow\\\":\\\"1px\\\",\\\"text-shadow_color\\\":\\\"rgb(0, 0, 0)\\\",\\\"letter-spacing\\\":\\\"0px\\\",\\\"word-spacing\\\":\\\"0px\\\",\\\"text-align\\\":\\\"center\\\",\\\"vertical-align\\\":\\\"middle\\\",\\\"background-color\\\":\\\"rgba(255, 255, 255, 0)\\\",\\\"border-radius\\\":\\\"0px\\\"},\\\"font_animation\\\":{\\\"text-animation\\\":\\\"tada\\\",\\\"text-animation-mode\\\":\\\"letters\\\"}}\",\"message_text\":\"{\\\"font_style\\\":{\\\"font-family\\\":\\\"\\\\\\\"Roboto Condensed\\\\\\\"\\\",\\\"font-size\\\":\\\"25px\\\",\\\"color\\\":\\\"rgb(255, 255, 255)\\\",\\\"font-weight\\\":\\\"normal\\\",\\\"font-style\\\":\\\"normal\\\",\\\"text-decoration\\\":\\\"none\\\",\\\"text-transform\\\":\\\"none\\\",\\\"text-shadow\\\":\\\"1px\\\",\\\"text-shadow_color\\\":\\\"rgb(0, 0, 0)\\\",\\\"letter-spacing\\\":\\\"0px\\\",\\\"word-spacing\\\":\\\"0px\\\",\\\"text-align\\\":\\\"center\\\",\\\"vertical-align\\\":\\\"middle\\\",\\\"background-color\\\":\\\"rgba(223, 255, 0, 0)\\\",\\\"border-radius\\\":\\\"0px\\\"},\\\"font_animation\\\":{\\\"text-animation\\\":\\\"none\\\",\\\"text-animation-mode\\\":\\\"letters\\\"}}\",\"donation_audio_volume\":50,\"donation_audio_play_scenario\":\"after_sound\",\"donation_audio_playback\":1,\"tts_is_enabled\":1,\"tts_language\":\"ru_RU\",\"tts_scenario\":\"after_sound\",\"tts_volume\":50,\"tts_amount_min\":\"0.00\",\"tts_voice\":\"male,female,25,3,19,\",\"tts_rate\":\"medium\",\"variation_conditions\":\"[{\\\"mode\\\":\\\"alert_type\\\",\\\"value\\\":4},{\\\"mode\\\":\\\"random\\\",\\\"value\\\":3}]\",\"name\":\"\\u041f\\u043b\\u0430\\u0442\\u043d\\u044b\\u0435 \\u043f\\u043e\\u0434\\u043f\\u0438\\u0441\\u0447\\u0438\\u043a\\u0438 Twitch\",\"is_active\":1,\"is_deleted\":0,\"position\":0,\"additional_data\":null,\"header_template\":\"{username} \\u0442\\u043e\\u043b\\u044c\\u043a\\u043e \\u0447\\u0442\\u043e \\u043f\\u043e\\u0434\\u043f\\u0438\\u0441\\u0430\\u043b\\u0441\\u044f!\",\"message_template\":null},{\"entity_id\":48824632,\"user_id\":9585175,\"group_id\":2,\"window_coor_x\":0,\"window_coor_y\":0,\"background_color\":\"#00ff00\",\"volume\":50,\"display_pattern\":\"image_top__text_bottom\",\"sound\":\"sounds\\/2\\/point_2.mp3\",\"image\":\"images\\/2\\/star.gif\",\"message_background\":\"rgba(0, 0, 0, 0)\",\"is_temporary_disabled\":0,\"color_1\":\"#FB8C2B\",\"color_2\":\"#FFFFFF\",\"display_duration\":\"8.50\",\"text_delay\":\"0.00\",\"text_duration\":\"8.50\",\"font_size_1\":60,\"font_size_2\":25,\"header_text\":\"{\\\"font_style\\\":{\\\"font-family\\\":\\\"\\\\\\\"Roboto Condensed\\\\\\\"\\\",\\\"font-size\\\":\\\"60px\\\",\\\"color\\\":\\\"rgb(251, 140, 43)\\\",\\\"font-weight\\\":\\\"bold\\\",\\\"font-style\\\":\\\"normal\\\",\\\"text-decoration\\\":\\\"none\\\",\\\"text-transform\\\":\\\"none\\\",\\\"text-shadow\\\":\\\"1px\\\",\\\"text-shadow_color\\\":\\\"rgb(0, 0, 0)\\\",\\\"letter-spacing\\\":\\\"0px\\\",\\\"word-spacing\\\":\\\"0px\\\",\\\"text-align\\\":\\\"center\\\",\\\"vertical-align\\\":\\\"middle\\\",\\\"background-color\\\":\\\"rgba(255, 255, 255, 0)\\\",\\\"border-radius\\\":\\\"0px\\\"},\\\"font_animation\\\":{\\\"text-animation\\\":\\\"tada\\\",\\\"text-animation-mode\\\":\\\"letters\\\"}}\",\"message_text\":\"{\\\"font_style\\\":{\\\"font-family\\\":\\\"\\\\\\\"Roboto Condensed\\\\\\\"\\\",\\\"font-size\\\":\\\"25px\\\",\\\"color\\\":\\\"rgb(255, 255, 255)\\\",\\\"font-weight\\\":\\\"normal\\\",\\\"font-style\\\":\\\"normal\\\",\\\"text-decoration\\\":\\\"none\\\",\\\"text-transform\\\":\\\"none\\\",\\\"text-shadow\\\":\\\"1px\\\",\\\"text-shadow_color\\\":\\\"rgb(0, 0, 0)\\\",\\\"letter-spacing\\\":\\\"0px\\\",\\\"word-spacing\\\":\\\"0px\\\",\\\"text-align\\\":\\\"center\\\",\\\"vertical-align\\\":\\\"middle\\\",\\\"background-color\\\":\\\"rgba(223, 255, 0, 0)\\\",\\\"border-radius\\\":\\\"0px\\\"},\\\"font_animation\\\":{\\\"text-animation\\\":\\\"none\\\",\\\"text-animation-mode\\\":\\\"letters\\\"}}\",\"donation_audio_volume\":50,\"donation_audio_play_scenario\":\"after_sound\",\"donation_audio_playback\":1,\"tts_is_enabled\":1,\"tts_language\":\"ru_RU\",\"tts_scenario\":\"after_sound\",\"tts_volume\":50,\"tts_amount_min\":\"0.00\",\"tts_voice\":\"male,female,25,3,19,\",\"tts_rate\":\"medium\",\"variation_conditions\":\"[{\\\"mode\\\":\\\"alert_type\\\",\\\"value\\\":4},{\\\"mode\\\":\\\"months_in_a_row\\\",\\\"value\\\":2}]\",\"name\":\"\\u041f\\u043b\\u0430\\u0442\\u043d\\u044b\\u0435 \\u043f\\u043e\\u0434\\u043f\\u0438\\u0441\\u043a\\u0438 Twitch - \\u043e\\u0442 2 \\u043c\\u0435\\u0441\\u044f\\u0446\\u0435\\u0432\",\"is_active\":1,\"is_deleted\":0,\"position\":0,\"additional_data\":null,\"header_template\":\"{username} \\u043f\\u043e\\u0434\\u043f\\u0438\\u0441\\u0430\\u043b\\u0441\\u044f {months} \\u043f\\u043e\\u0434\\u0440\\u044f\\u0434!\",\"message_template\":null},{\"entity_id\":48824639,\"user_id\":9585175,\"group_id\":2,\"window_coor_x\":0,\"window_coor_y\":0,\"background_color\":\"#00ff00\",\"volume\":50,\"display_pattern\":\"image_top__text_bottom\",\"sound\":\"sounds\\/2\\/point_2.mp3\",\"image\":\"images\\/2\\/star.gif\",\"message_background\":\"rgba(0, 0, 0, 0)\",\"is_temporary_disabled\":0,\"color_1\":\"#FB8C2B\",\"color_2\":\"#FFFFFF\",\"display_duration\":\"8.50\",\"text_delay\":\"0.00\",\"text_duration\":\"8.50\",\"font_size_1\":60,\"font_size_2\":25,\"header_text\":\"{\\\"font_style\\\":{\\\"font-family\\\":\\\"\\\\\\\"Roboto Condensed\\\\\\\"\\\",\\\"font-size\\\":\\\"60px\\\",\\\"color\\\":\\\"rgb(251, 140, 43)\\\",\\\"font-weight\\\":\\\"bold\\\",\\\"font-style\\\":\\\"normal\\\",\\\"text-decoration\\\":\\\"none\\\",\\\"text-transform\\\":\\\"none\\\",\\\"text-shadow\\\":\\\"1px\\\",\\\"text-shadow_color\\\":\\\"rgb(0, 0, 0)\\\",\\\"letter-spacing\\\":\\\"0px\\\",\\\"word-spacing\\\":\\\"0px\\\",\\\"text-align\\\":\\\"center\\\",\\\"vertical-align\\\":\\\"middle\\\",\\\"background-color\\\":\\\"rgba(255, 255, 255, 0)\\\",\\\"border-radius\\\":\\\"0px\\\"},\\\"font_animation\\\":{\\\"text-animation\\\":\\\"tada\\\",\\\"text-animation-mode\\\":\\\"letters\\\"}}\",\"message_text\":\"{\\\"font_style\\\":{\\\"font-family\\\":\\\"\\\\\\\"Roboto Condensed\\\\\\\"\\\",\\\"font-size\\\":\\\"25px\\\",\\\"color\\\":\\\"rgb(255, 255, 255)\\\",\\\"font-weight\\\":\\\"normal\\\",\\\"font-style\\\":\\\"normal\\\",\\\"text-decoration\\\":\\\"none\\\",\\\"text-transform\\\":\\\"none\\\",\\\"text-shadow\\\":\\\"1px\\\",\\\"text-shadow_color\\\":\\\"rgb(0, 0, 0)\\\",\\\"letter-spacing\\\":\\\"0px\\\",\\\"word-spacing\\\":\\\"0px\\\",\\\"text-align\\\":\\\"center\\\",\\\"vertical-align\\\":\\\"middle\\\",\\\"background-color\\\":\\\"rgba(223, 255, 0, 0)\\\",\\\"border-radius\\\":\\\"0px\\\"},\\\"font_animation\\\":{\\\"text-animation\\\":\\\"none\\\",\\\"text-animation-mode\\\":\\\"letters\\\"}}\",\"donation_audio_volume\":50,\"donation_audio_play_scenario\":\"after_sound\",\"donation_audio_playback\":1,\"tts_is_enabled\":1,\"tts_language\":\"ru_RU\",\"tts_scenario\":\"after_sound\",\"tts_volume\":50,\"tts_amount_min\":\"0.00\",\"tts_voice\":\"male,female,25,3,19,\",\"tts_rate\":\"medium\",\"variation_conditions\":\"[{\\\"mode\\\":\\\"alert_type\\\",\\\"value\\\":13},{\\\"mode\\\":\\\"random\\\",\\\"value\\\":3}]\",\"name\":\"Twitch gifted subscribers\",\"is_active\":1,\"is_deleted\":0,\"position\":0,\"additional_data\":null,\"header_template\":\"{giver} \\u0442\\u043e\\u043b\\u044c\\u043a\\u043e \\u0447\\u0442\\u043e \\u043f\\u043e\\u0434\\u0430\\u0440\\u0438\\u043b \\u043f\\u043e\\u0434\\u043f\\u0438\\u0441\\u043a\\u0443 {username}!\",\"message_template\":null},{\"entity_id\":48824640,\"user_id\":9585175,\"group_id\":2,\"window_coor_x\":0,\"window_coor_y\":0,\"background_color\":\"#00ff00\",\"volume\":50,\"display_pattern\":\"image_top__text_bottom\",\"sound\":\"sounds\\/2\\/point_2.mp3\",\"image\":\"images\\/2\\/star.gif\",\"message_background\":\"rgba(0, 0, 0, 0)\",\"is_temporary_disabled\":0,\"color_1\":\"#FB8C2B\",\"color_2\":\"#FFFFFF\",\"display_duration\":\"8.50\",\"text_delay\":\"0.00\",\"text_duration\":\"8.50\",\"font_size_1\":60,\"font_size_2\":25,\"header_text\":\"{\\\"font_style\\\":{\\\"font-family\\\":\\\"\\\\\\\"Roboto Condensed\\\\\\\"\\\",\\\"font-size\\\":\\\"60px\\\",\\\"color\\\":\\\"rgb(251, 140, 43)\\\",\\\"font-weight\\\":\\\"bold\\\",\\\"font-style\\\":\\\"normal\\\",\\\"text-decoration\\\":\\\"none\\\",\\\"text-transform\\\":\\\"none\\\",\\\"text-shadow\\\":\\\"1px\\\",\\\"text-shadow_color\\\":\\\"rgb(0, 0, 0)\\\",\\\"letter-spacing\\\":\\\"0px\\\",\\\"word-spacing\\\":\\\"0px\\\",\\\"text-align\\\":\\\"center\\\",\\\"vertical-align\\\":\\\"middle\\\",\\\"background-color\\\":\\\"rgba(255, 255, 255, 0)\\\",\\\"border-radius\\\":\\\"0px\\\"},\\\"font_animation\\\":{\\\"text-animation\\\":\\\"tada\\\",\\\"text-animation-mode\\\":\\\"letters\\\"}}\",\"message_text\":\"{\\\"font_style\\\":{\\\"font-family\\\":\\\"\\\\\\\"Roboto Condensed\\\\\\\"\\\",\\\"font-size\\\":\\\"25px\\\",\\\"color\\\":\\\"rgb(255, 255, 255)\\\",\\\"font-weight\\\":\\\"normal\\\",\\\"font-style\\\":\\\"normal\\\",\\\"text-decoration\\\":\\\"none\\\",\\\"text-transform\\\":\\\"none\\\",\\\"text-shadow\\\":\\\"1px\\\",\\\"text-shadow_color\\\":\\\"rgb(0, 0, 0)\\\",\\\"letter-spacing\\\":\\\"0px\\\",\\\"word-spacing\\\":\\\"0px\\\",\\\"text-align\\\":\\\"center\\\",\\\"vertical-align\\\":\\\"middle\\\",\\\"background-color\\\":\\\"rgba(223, 255, 0, 0)\\\",\\\"border-radius\\\":\\\"0px\\\"},\\\"font_animation\\\":{\\\"text-animation\\\":\\\"none\\\",\\\"text-animation-mode\\\":\\\"letters\\\"}}\",\"donation_audio_volume\":50,\"donation_audio_play_scenario\":\"after_sound\",\"donation_audio_playback\":1,\"tts_is_enabled\":1,\"tts_language\":\"ru_RU\",\"tts_scenario\":\"after_sound\",\"tts_volume\":50,\"tts_amount_min\":\"0.00\",\"tts_voice\":\"male,female,25,3,19,\",\"tts_rate\":\"medium\",\"variation_conditions\":\"[{\\\"mode\\\":\\\"alert_type\\\",\\\"value\\\":15},{\\\"mode\\\":\\\"random\\\",\\\"value\\\":3}]\",\"name\":\"Twitch Prime subscribers\",\"is_active\":1,\"is_deleted\":0,\"position\":0,\"additional_data\":null,\"header_template\":\"{username} \\u0442\\u043e\\u043b\\u044c\\u043a\\u043e \\u0447\\u0442\\u043e \\u043f\\u043e\\u0434\\u043f\\u0438\\u0441\\u0430\\u043b\\u0441\\u044f!\",\"message_template\":null},{\"entity_id\":48824641,\"user_id\":9585175,\"group_id\":2,\"window_coor_x\":0,\"window_coor_y\":0,\"background_color\":\"#00ff00\",\"volume\":50,\"display_pattern\":\"image_top__text_bottom\",\"sound\":\"sounds\\/2\\/point_2.mp3\",\"image\":\"images\\/2\\/star.gif\",\"message_background\":\"rgba(0, 0, 0, 0)\",\"is_temporary_disabled\":0,\"color_1\":\"#FB8C2B\",\"color_2\":\"#FFFFFF\",\"display_duration\":\"8.50\",\"text_delay\":\"0.00\",\"text_duration\":\"8.50\",\"font_size_1\":60,\"font_size_2\":25,\"header_text\":\"{\\\"font_style\\\":{\\\"font-family\\\":\\\"\\\\\\\"Roboto Condensed\\\\\\\"\\\",\\\"font-size\\\":\\\"60px\\\",\\\"color\\\":\\\"rgb(251, 140, 43)\\\",\\\"font-weight\\\":\\\"bold\\\",\\\"font-style\\\":\\\"normal\\\",\\\"text-decoration\\\":\\\"none\\\",\\\"text-transform\\\":\\\"none\\\",\\\"text-shadow\\\":\\\"1px\\\",\\\"text-shadow_color\\\":\\\"rgb(0, 0, 0)\\\",\\\"letter-spacing\\\":\\\"0px\\\",\\\"word-spacing\\\":\\\"0px\\\",\\\"text-align\\\":\\\"center\\\",\\\"vertical-align\\\":\\\"middle\\\",\\\"background-color\\\":\\\"rgba(255, 255, 255, 0)\\\",\\\"border-radius\\\":\\\"0px\\\"},\\\"font_animation\\\":{\\\"text-animation\\\":\\\"tada\\\",\\\"text-animation-mode\\\":\\\"letters\\\"}}\",\"message_text\":\"{\\\"font_style\\\":{\\\"font-family\\\":\\\"\\\\\\\"Roboto Condensed\\\\\\\"\\\",\\\"font-size\\\":\\\"25px\\\",\\\"color\\\":\\\"rgb(255, 255, 255)\\\",\\\"font-weight\\\":\\\"normal\\\",\\\"font-style\\\":\\\"normal\\\",\\\"text-decoration\\\":\\\"none\\\",\\\"text-transform\\\":\\\"none\\\",\\\"text-shadow\\\":\\\"1px\\\",\\\"text-shadow_color\\\":\\\"rgb(0, 0, 0)\\\",\\\"letter-spacing\\\":\\\"0px\\\",\\\"word-spacing\\\":\\\"0px\\\",\\\"text-align\\\":\\\"center\\\",\\\"vertical-align\\\":\\\"middle\\\",\\\"background-color\\\":\\\"rgba(223, 255, 0, 0)\\\",\\\"border-radius\\\":\\\"0px\\\"},\\\"font_animation\\\":{\\\"text-animation\\\":\\\"none\\\",\\\"text-animation-mode\\\":\\\"letters\\\"}}\",\"donation_audio_volume\":50,\"donation_audio_play_scenario\":\"after_sound\",\"donation_audio_playback\":1,\"tts_is_enabled\":1,\"tts_language\":\"ru_RU\",\"tts_scenario\":\"after_sound\",\"tts_volume\":50,\"tts_amount_min\":\"0.00\",\"tts_voice\":\"male,female,25,3,19,\",\"tts_rate\":\"medium\",\"variation_conditions\":\"[{\\\"mode\\\":\\\"alert_type\\\",\\\"value\\\":15},{\\\"mode\\\":\\\"months_in_a_row\\\",\\\"value\\\":2}]\",\"name\":\"\\u041f\\u043e\\u0434\\u043f\\u0438\\u0441\\u043a\\u0438 Twitch Prime - \\u043e\\u0442 2 \\u043c\\u0435\\u0441\\u044f\\u0446\\u0435\\u0432\",\"is_active\":1,\"is_deleted\":0,\"position\":0,\"additional_data\":null,\"header_template\":\"{username} \\u043f\\u043e\\u0434\\u043f\\u0438\\u0441\\u0430\\u043b\\u0441\\u044f {months} \\u043f\\u043e\\u0434\\u0440\\u044f\\u0434!\",\"message_template\":null}]}');
+
+        // console.log(alerts_widget_settings);
+        // console.log(settings);
+
+        // settings = alerts_widget_settings.variations[0];
+
+        uploads_base_part = '//files.donationalerts.com/uploads/';
+
+        window.is_alerting = false;
+        window.is_speaking = false;
+
+        var audioFormats = {
+          'mp3': {
+            'type': ['audio/mpeg; codecs="mp3"', 'audio/mpeg', 'audio/mp3', 'audio/MPA', 'audio/mpa-robust'],
+            'required': false
+          },
+          'mp4': {
+            'related': ['aac', 'm4a'], // additional formats under the MP4 container
+            'type': ['audio/mp4; codecs="mp4a.40.2"', 'audio/aac', 'audio/x-m4a', 'audio/MP4A-LATM', 'audio/mpeg4-generic'],
+            'required': false
+          },
+          'ogg': {
+            'type': ['audio/ogg; codecs=vorbis'],
+            'required': false
+          },
+          'wav': {
+            'type': ['audio/wav; codecs="1"', 'audio/wav', 'audio/wave', 'audio/x-wav'],
+            'required': false
+          }
+        }
+
+        $.each(a_settings.variations, function (index, variation) {
+          var conditions = $.parseJSON(variation.variation_conditions);
+          var alert_type_id = $.each(conditions, function (j, condition) {
+            if (condition.mode == 'alert_type') {
+              return parseInt(condition.value);
+              return false;
+            }
+          });
+          if (group_id == parseInt(variation.group_id) && variation.sound != '' && variation.sound != null) {
+            var audio_format = variation.sound.split('.').pop().toLowerCase();
+            if (audio_format in audioFormats) {
+              audioFormats[audio_format]['required'] = true;
+            }
+          }
+        });
+
+        soundManager.audioFormats = audioFormats;
+        soundManager.preferFlash = false;
+        soundManager.useHTML5Audio = true;
+
+        soundManager.setup({
+          url: '/js/',
+          onready: function () {
+            // debug('READY');
+            initWidget(a_settings);
+            scanForAlerts();
+            updateData();
+            startDataReceiving();
+          },
+          ontimeout: function (status) {
+            // debug('TIMEOUT '+JSON.stringify(status));
+            initWidget(a_settings);
+            scanForAlerts();
+            updateData();
+            startDataReceiving();
+          }
+        });
+
+                  setTimeout(function () {
+            updateStreamData();
+          }, 60000);
+        
+      } else {
+        $('.container').html('<div style="color:white;background:black;"><h1>Your browser is outdated</h1><p>We only support the latest technologies in order to ensure maximum widget performance.</p><p>If you use the CLR Browser Source Plugin, you must update the plugin to the version released on September 10, 2014.</p></div>');
+      }
+
+    </script>
+
+    <script>
+      function initWsConnection() {
+        if (!isInIframe()) {
+          window.socket = new SocketIOClientProxy({ socketHost: 'wss://socket8.donationalerts.com:443', widgetToken: token })
+        } else {
+          window.socket = null;
+        }
+      }
+
+      initWsConnection();
+
+      if (AlertLogger && !window.alertLogger) {
+        window.alertLogger = new AlertLogger()
+      }
+
+      if (YoutubeClientProxy && !window.youtubeClientProxy) {
+        window.youtubeClientProxy = new YoutubeClientProxy({ widgetToken: token, fallback: group_id === 1 })
+      }
+
+      if (TwitchClientProxy && !window.twitchClientProxy) {
+        window.twitchClientProxy = new TwitchClientProxy({ widgetToken: token, fallback: group_id === 1 })
+      }
+
+      if (socket !== null) {
+        socket.on('connect', function (msg) {
+          console.log('WS: connected');
+          if (da_debug) debug('Connected to WS server');
+        });
+
+        socket.on('connect_error', function (msg) {
+          console.log('WS: connection_error');
+          if (da_debug) debug('Could not connect to WS server');
+        });
+
+        socket.on('connect_timeout', function (msg) {
+          console.log('WS: connection_timeout');
+          if (da_debug) debug('Connection to WS server is timed out');
+        });
+
+        socket.on('reconnect', function (msg) {
+          console.log('WS: reconnected');
+          if (da_debug) debug('Reconnected to WS server');
+        });
+
+        socket.on('donation', function (msg) {
+          if (da_debug) debug('Received new message');
+          new_donation = $.parseJSON(msg);
+          try {
+            if (typeof new_donation.is_shown !== 'undefined' && parseInt(new_donation.is_shown) == 1) {
+              return;
+            }
+          } catch (err) {}
+          if ($.grep(alerts_array[String(new_donation.alert_type)], function (e) {
+            return e.id == String(new_donation.id);
+          }).length == 0) {
+            alerts_array[String(new_donation.alert_type)].push(new_donation);
+            if (da_debug) debug('Added message to the queue');
+            if (da_debug) debug('Queue items count of type ' + new_donation.alert_type + ': ' + alerts_array[String(new_donation.alert_type)].length);
+          }
+          if (dPoll.poll_is_available == true && dPoll.is_displaying == true) {
+            dPoll.getData(false, true);
+          }
+        });
+
+        socket.on('update-alert_widget', function (msg) {
+          alert_data = $.parseJSON(msg);
+          console.log(alert_data);
+          if (typeof alert_data['_additional'] !== 'undefined') {
+            if (typeof alert_data['_additional'].reload !== 'undefined' && alert_data['_additional'].reload == 1) {
+              location.reload();
+            }
+          }
+          initWidget(alert_data);
+          updateData();
+        });
+
+        socket.on('update-user_general_widget_settings', function (msg) {
+          handleGeneralWidgetSettings(msg);
+        });
+
+        socket.on('alert-show', function (msg) {
+          var msg = $.parseJSON(msg);
+          if (msg.action == 'skip') {
+            skipCurrentAlert(msg.alert_id, msg.alert_type);
+          } else if (msg.action == 'show-now') {
+            moderated_alerts[String(msg.alert_type)].push(parseInt(msg.alert_id));
+          }
+        });
+      }
+
+      var muted_subgifts = {};
+
+      logWidget();
+
+      window.tryToUpdateWidget = function() {
+        if (!window.is_alerting && !window.is_speaking && !dPoll.is_displaying) {
+          location.reload()
+        } else {
+          setTimeout(tryToUpdateWidget, 5000)
+        }
+      }
+    </script>
+
+</div>
+
+</body>
+</html>

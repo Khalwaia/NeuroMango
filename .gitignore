@@ -1,0 +1,35 @@
+# Virtual Environment
+venv/
+env/
+.venv/
+
+# Python Cache
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Secrets
+.env
+
+# Application Cache/Data
+temp/
+memory_db/
+
+# Large AI Models
+models/
+voice_samples/
+
+# OS specific
+.DS_Store
+Thumbs.db
+
+
+# Unity
+[Ll]ibrary/
+[Tt]emp/
+[Oo]bj/
+[Bb]uild/
+[Bb]uilds/
+[Ll]ogs/
+[Uu]ser[Ss]ettings/

@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NeuroMango — Admin Dashboard</title>
+    <link rel="stylesheet" href="/static/css/style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div id="dashboard-container">
+        <!-- Header -->
+        <header class="glass-header">
+            <div class="logo">
+                <span class="logo-icon">🥭</span>
+                <h1>NeuroMango</h1>
+                <div id="status-indicator" class="disconnected"></div>
+            </div>
+            
+            <div class="header-controls">
+                <div class="vision-controls">
+                    <label>Vision Mode:</label>
+                    <select id="vision-select">
+                        <option value="off">Off (Blind)</option>
+                        <option value="screen">Screen Capture</option>
+                        <option value="webcam">Webcam</option>
+                    </select>
+                </div>
+                
+                <div class="modules-controls" style="display: flex; gap: 10px; align-items: center;">
+                    <label style="font-size: 12px; color: var(--text-muted); text-transform: uppercase; font-weight: bold;">Модули:</label>
+                    <button id="toggle-twitch-btn" class="module-btn" data-module="twitch">🟣 Twitch</button>
+                    <button id="toggle-da-btn" class="module-btn" data-module="da">💸 DA</button>
+                </div>
+            </div>
+        </header>
+
+        <!-- Main Content -->
+        <main class="dashboard-grid">
+            <!-- Left Column: Terminal & Chat -->
+            <section class="panel terminal-panel">
+                <div class="panel-header">
+                    <h2>🧠 Agent Logs & Thoughts</h2>
+                    <button id="clear-logs-btn" class="icon-btn" title="Clear Logs">🗑️</button>
+                </div>
+                
+                <div id="terminal-output" class="terminal-container">
+                    <!-- Logs will be appended here -->
+                    <div class="log-entry system">System initialized. Awaiting connection...</div>
+                </div>
+                
+                <div class="chat-input-wrapper">
+                    <input type="text" id="text-input" placeholder="Enter system command or chat message...">
+                    <button id="mic-btn" class="icon-btn" title="Voice Input">🎤</button>
+                    <button id="send-btn">Send</button>
+                </div>
+            </section>
+
+            <!-- Right Column: Core Memory Editor -->
+            <section class="panel memory-panel">
+                <div class="panel-header">
+                    <h2>🧬 Core Personality (Ядро)</h2>
+                    <span id="save-status" class="status-badge">Loaded</span>
+                </div>
+                
+                <textarea id="core-memory-editor" spellcheck="false" placeholder="Loading core memory..."></textarea>
+                
+                <div class="panel-footer">
+                    <button id="save-memory-btn" class="primary-btn">Save Core Memory</button>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <!-- Scripts -->
+    <script type="module" src="/static/js/app.js"></script>
+</body>
+</html>
