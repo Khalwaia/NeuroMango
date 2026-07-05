@@ -2,6 +2,9 @@ import os
 import sys
 import json
 import asyncio
+import traceback
+import json
+import asyncio
 from pathlib import Path
 
 # Добавляем корневую папку в путь, чтобы импортировать config
@@ -13,6 +16,9 @@ async def generate_dataset(num_batches=5, pairs_per_batch=10):
     """
     Генерирует синтетический датасет для обучения LoRA.
     """
+    if sys.platform == "win32":
+        sys.stdout.reconfigure(encoding='utf-8')
+        
     print("🤖 Инициализация генератора датасета...")
     
     # Читаем характер
@@ -84,16 +90,17 @@ Format:
                 for pair in pairs:
                     if "instruction" in pair and "output" in pair:
                         # Записываем в формате JSONL (Alpaca format)
-                        json_line = json.dumps({{
+                        json_line = json.dumps({
                             "instruction": pair["instruction"],
                             "input": "",
                             "output": pair["output"]
-                        }}, ensure_ascii=False)
+                        }, ensure_ascii=False)
                         f.write(json_line + "\n")
                         total_generated += 1
                         
             except Exception as e:
                 print(f"❌ Ошибка генерации батча {i+1}: {e}")
+                traceback.print_exc()
                 
     print(f"✅ Готово! Успешно сгенерировано {total_generated} пар для обучения. Файл: {dataset_file}")
 
