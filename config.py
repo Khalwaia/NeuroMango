@@ -19,13 +19,14 @@ for _dir in [MODELS_DIR, STATIC_DIR, VOICE_SAMPLES_DIR, TEMP_DIR]:
 
 # ──────────────────────────────── LLM (Brain) ──────────────────────────────
 # Основная модель для общения (Gemini)
-LLM_API_KEY = os.getenv("LLM_API_KEY")
-LLM_MODEL = "gemini-3.1-flash-lite"
-LLM_BASE_URL = "https://generativelanguage.googleapis.com/v1beta/openai/"
+LLM_API_KEY = os.getenv("LLM_API_KEY", "")
+LLM_MODEL = os.getenv("LLM_MODEL", "gemini-3.1-flash-lite")
+LLM_BASE_URL = os.getenv("LLM_BASE_URL", "https://generativelanguage.googleapis.com/v1beta/openai/")
 
 # Подсознание (СВИНОПАС - Экстрактор памяти)
-GROQ_API_KEY = os.getenv("GROQ_API_KEY")
-GROQ_BASE_URL = "https://api.groq.com/openai/v1"
+GROQ_API_KEY = os.getenv("GROQ_API_KEY", "")
+GROQ_MODEL = os.getenv("GROQ_MODEL", "llama-3.1-8b-instant")
+GROQ_BASE_URL = os.getenv("GROQ_BASE_URL", "https://api.groq.com/openai/v1")
 
 # ──────────────────────────────── Memory (ChromaDB) ─────────────────────────
 CHROMA_DB_DIR = BASE_DIR / "memory_db"

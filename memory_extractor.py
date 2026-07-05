@@ -12,7 +12,7 @@ class MemoryExtractor:
             api_key=config.GROQ_API_KEY,
             base_url=config.GROQ_BASE_URL
         )
-        self.model = "llama-3.1-8b-instant"
+        self.model = config.GROQ_MODEL
 
     async def extract_memory(self, user_input: str, avatar_response: str):
         prompt = f"""You are a subconscious memory extractor for an AI assistant.
