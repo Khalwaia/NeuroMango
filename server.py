@@ -162,9 +162,33 @@ async def initialize_engines():
     logger.info("✅ Models loaded successfully. AI is ready.")
     await manager.broadcast_json({"type": "system_log", "text": "✅ Models loaded successfully. AI is ready."})
 
+async def heartbeat_loop():
+    logger.info("💓 Perfect Heartbeat module started.")
+    while True:
+        await asyncio.sleep(10)
+        global heartbeat_enabled
+        if not heartbeat_enabled or not system_ready:
+            continue
+            
+        import time
+        import shared_state
+        time_since_last = time.time() - shared_state.last_interaction_time
+        
+        # 120 seconds of silence across EVERYTHING (stream, donations, AI speech, etc)
+        if time_since_last > 120:
+            if _current_speech_task and not _current_speech_task.done():
+                continue
+                
+            logger.info("💓 Heartbeat: Chat is silent for 2 minutes. Triggering spontaneous action.")
+            prompt = "[СИСТЕМНОЕ СООБЩЕНИЕ]: На стриме уже 2 минуты абсолютная тишина. Никто ничего не пишет, никаких системных событий нет. Отреагируй на эту тишину. Сделай ровно ОДНО короткое действие (например, зевни, вздохни, скажи что-то короткое, включи музыку или пошути над Артёмом). НЕ ПИШИ ДЛИННЫЕ ТЕКСТЫ."
+            
+            _schedule_speech(prompt, is_heartbeat=True, sender_name="Система", sender_role="system")
+            shared_state.last_interaction_time = time.time()
+
 @app.on_event("startup")
 async def startup_event():
     asyncio.create_task(initialize_engines())
+    asyncio.create_task(heartbeat_loop())
 
 @app.get("/api/modules")
 async def get_modules():
@@ -414,6 +438,9 @@ async def _send_speech(text: str, is_heartbeat: bool = False, sender_name: str =
             "type": "error",
             "message": f"TTS error: {e}",
         })
+    finally:
+        import time
+        shared_state.last_interaction_time = time.time()
 
 
 # ──────────────────────────── WebSocket ────────────────────────────────

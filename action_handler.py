@@ -131,6 +131,17 @@ def execute_action(action_str: str):
                 keys = [k.strip() for k in arg.split("+")]
                 pyautogui.hotkey(*keys)
                 logger.info(f"⌨️ Выполняю команду: Нажимаю клавиши {keys}")
+            elif command == "ToggleHeartbeat":
+                import requests
+                try:
+                    state_res = requests.get("http://127.0.0.1:8000/api/modules").json()
+                    is_enabled = state_res.get("heartbeat", True)
+                    new_state = not is_enabled
+                    requests.post(f"http://127.0.0.1:8000/api/modules/toggle?module=heartbeat&enabled={str(new_state).lower()}")
+                    status = "ВКЛЮЧЕН" if new_state else "ОТКЛЮЧЕН"
+                    logger.info(f"💓 Фоновый режим (Heartbeat) {status} по инициативе ИИ!")
+                except Exception as e:
+                    logger.error(f"❌ Ошибка переключения Heartbeat: {e}")
             else:
                 logger.warning(f"⚠️ Неизвестная команда Action: {command}")
         except Exception as e:
