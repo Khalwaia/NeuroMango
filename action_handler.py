@@ -78,13 +78,13 @@ def execute_action(action_str: str):
                 import shared_state
                 import asyncio
                 logger.info(f"✉️ Выполняю команду: Пишу в Twitch чат ({arg})")
-                if hasattr(server, 'twitch_service'):
+                if hasattr(shared_state, 'twitch_service'):
                     asyncio.create_task(shared_state.twitch_service.send_chat_message(arg))
             elif command == "QueueMusic":
                 import shared_state
                 import asyncio
                 logger.info(f"🎶 Выполняю команду: Добавляю в очередь музыку ({arg})")
-                if hasattr(server, 'music_service'):
+                if hasattr(shared_state, 'music_service'):
                     asyncio.create_task(shared_state.music_service.add_to_queue(arg))
             elif command == "RunCommand":
                 import subprocess
@@ -125,11 +125,12 @@ def execute_action(action_str: str):
                 logger.info(f"⌨️ Выполняю команду: Нажимаю клавиши {keys}")
             elif command == "ToggleHeartbeat":
                 import requests
+                import config
                 try:
-                    state_res = requests.get("http://127.0.0.1:8000/api/modules").json()
+                    state_res = requests.get(f"http://127.0.0.1:{config.PORT}/api/modules").json()
                     is_enabled = state_res.get("heartbeat", True)
                     new_state = not is_enabled
-                    requests.post(f"http://127.0.0.1:8000/api/modules/toggle?module=heartbeat&enabled={str(new_state).lower()}")
+                    requests.post(f"http://127.0.0.1:{config.PORT}/api/modules/toggle?module=heartbeat&enabled={str(new_state).lower()}")
                     status = "ВКЛЮЧЕН" if new_state else "ОТКЛЮЧЕН"
                     logger.info(f"💓 Фоновый режим (Heartbeat) {status} по инициативе ИИ!")
                 except Exception as e:
