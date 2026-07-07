@@ -163,7 +163,7 @@ async def initialize_engines():
     await manager.broadcast_json({"type": "system_log", "text": "✅ Models loaded successfully. AI is ready."})
 
 async def heartbeat_loop():
-    logger.info("💓 Perfect Heartbeat module started.")
+    logger.info("💓 Heartbeat (Subconscious) module started.")
     while True:
         await asyncio.sleep(10)
         global heartbeat_enabled
@@ -171,22 +171,87 @@ async def heartbeat_loop():
             continue
             
         import time
+        import random
         import shared_state
+        import config
         time_since_last = time.time() - shared_state.last_interaction_time
         
-        # 120 seconds of silence across EVERYTHING (stream, donations, AI speech, etc)
+        # 120 seconds of absolute silence across everything
         if time_since_last > 120:
             if _current_speech_task and not _current_speech_task.done():
                 continue
                 
-            logger.info("💓 Heartbeat: Chat is silent for 2 minutes. Triggering spontaneous action.")
-            import config
-            if config.TWITCH_ENABLED:
-                prompt = "[СИСТЕМНОЕ СОБЫТИЕ: АФК РЕЖИМ]. На стриме уже 2 минуты полная тишина. Развлеки себя или зрителей: прокомментируй это, погугли что-то интересное, поставь музыку или используй звуки. Сделай одно-два коротких действия. НЕ ПИШИ ДЛИННЫХ ТЕКСТОВ."
-            else:
-                prompt = "[СИСТЕМНОЕ СОБЫТИЕ: АФК РЕЖИМ]. Уже 2 минуты полная тишина. Артём молчит или куда-то отошел. Развлеки себя: прокомментируй это, погугли что-то интересное, поставь музыку или используй звуки. Сделай одно-два коротких действия. НЕ ПИШИ ДЛИННЫХ ТЕКСТОВ."
+            logger.info("💓 Heartbeat: Subconscious activating after %.0f seconds of silence.", time_since_last)
             
-            _schedule_speech(prompt, is_heartbeat=True, sender_name="Системный монитор", sender_role="system")
+            # --- Build subconscious context ---
+            memory_mgr = shared_state.llm.memory
+            
+            # 1. Pull a random memory from vector DB (like a thought surfacing)
+            random_memory = ""
+            try:
+                mem_count = memory_mgr.collection.count()
+                if mem_count > 0:
+                    # Pick a random "seed" word to query against for variety
+                    seeds = ["Артём", "стрим", "музыка", "игра", "жизнь", "интересно", "смешно", "вспомнить", "скучно", "ночь", "утро", "донат", "чат"]
+                    seed = random.choice(seeds)
+                    results = memory_mgr.collection.query(
+                        query_texts=[seed],
+                        n_results=min(3, mem_count)
+                    )
+                    if results and results['documents'] and results['documents'][0]:
+                        picked = random.choice(results['documents'][0])
+                        random_memory = f"[Всплывшее воспоминание]: {picked}"
+            except Exception as e:
+                logger.warning("Heartbeat memory retrieval error: %s", e)
+            
+            # 2. Pull random graph knowledge (associations)
+            graph_snippet = ""
+            try:
+                if memory_mgr.graph.number_of_edges() > 0:
+                    edges = list(memory_mgr.graph.edges(data=True))
+                    sample_edges = random.sample(edges, min(3, len(edges)))
+                    facts = [f"  {u} → {d.get('relation', '?')} → {v}" for u, v, d in sample_edges]
+                    graph_snippet = "[Ассоциации из памяти]:\n" + "\n".join(facts)
+            except Exception as e:
+                logger.warning("Heartbeat graph retrieval error: %s", e)
+            
+            # 3. Analyze recent history for context
+            history_hint = ""
+            try:
+                recent = memory_mgr.history[-5:] if memory_mgr.history else []
+                if recent:
+                    last_msgs = [f"  {m['role']}: {m['content'][:80]}" for m in recent]
+                    history_hint = "[Последние сообщения перед тишиной]:\n" + "\n".join(last_msgs)
+                else:
+                    history_hint = "[Контекст]: Сегодня ещё никто ничего не писал."
+            except Exception:
+                pass
+            
+            # 4. Environmental info
+            minutes_silent = int(time_since_last // 60)
+            env_info = f"[Окружение]: Тишина уже {minutes_silent} мин."
+            if config.TWITCH_ENABLED:
+                env_info += " Режим: Стрим на Twitch."
+            else:
+                env_info += " Режим: Локальный (без стрима)."
+            
+            # 5. Assemble the subconscious prompt
+            parts = [
+                "[ПОДСОЗНАНИЕ АКТИВИРОВАНО]",
+                env_info,
+            ]
+            if random_memory:
+                parts.append(random_memory)
+            if graph_snippet:
+                parts.append(graph_snippet)
+            if history_hint:
+                parts.append(history_hint)
+            parts.append("[Инструкция]: Ты сейчас наедине со своими мыслями. Проанализируй контекст. Можешь: вспомнить что-то и подумать об этом, погуглить то что тебя интересует, поставить музыку, использовать звуки, или просто помолчать (ответь SILENCE). Действуй как живое существо со своим внутренним миром. НЕ ПИШИ ДЛИННЫХ ТЕКСТОВ.")
+            
+            prompt = "\n".join(parts)
+            logger.info("💓 Subconscious prompt:\n%s", prompt)
+            
+            _schedule_speech(prompt, is_heartbeat=True, sender_name="Подсознание", sender_role="system")
             shared_state.last_interaction_time = time.time()
 
 @app.on_event("startup")
