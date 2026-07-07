@@ -14,7 +14,7 @@ def get_available_sounds() -> str:
     
     return ", ".join(wav_files)
 
-def build_system_prompt(memory_mgr: MemoryManager, user_query: str) -> str:
+def build_system_prompt(memory_mgr: MemoryManager, user_query: str, vision_context: str = "") -> str:
     """
     Builds the dynamic system prompt matching the advanced persona architecture (SVINOPAS).
     """
@@ -73,12 +73,17 @@ def build_system_prompt(memory_mgr: MemoryManager, user_query: str) -> str:
         pass
 
     # Assemble the final prompt
+    # Vision context (continuous scene descriptions)
+    vision_block = ""
+    if vision_context:
+        vision_block = f"\n{vision_context}\n"
+
     prompt = f"""{core_section}
 
 [ДОСТУПНЫЕ ЗВУКИ]: Ты можешь использовать [Action: PlaySound=название], выбирая ИЗ ЭТОГО СПИСКА: {sounds_list}
 
 {music_text}
-
+{vision_block}
 # 🕰️ СВИНОПАС: Воспоминания (Timeline)
 {timeline_context}
 
@@ -87,7 +92,7 @@ def build_system_prompt(memory_mgr: MemoryManager, user_query: str) -> str:
 """
     return prompt
 
-def build_vision_prompt(memory_mgr: MemoryManager) -> str:
+def build_vision_prompt(memory_mgr: MemoryManager, vision_context: str = "") -> str:
     """
     Builds the system prompt for the background Vision Heartbeat.
     It inherits the core personality from core_memory.txt, but enforces strict heartbeat rules.
@@ -117,10 +122,15 @@ def build_vision_prompt(memory_mgr: MemoryManager) -> str:
     else:
         music_rule = '3. [ВАЖНО] Модуль Twitch отключен. НЕ ИСПОЛЬЗУЙ команду [Action: QueueMusic], музыка отключена.'
 
+    # Vision context (continuous scene descriptions)
+    vision_block = ""
+    if vision_context:
+        vision_block = f"\n{vision_context}\n"
+
     prompt = f"""{core_section}
 
 [ДОСТУПНЫЕ ЗВУКИ]: Ты можешь использовать [Action: PlaySound=название], выбирая ИЗ ЭТОГО СПИСКА: {sounds_list}
-
+{vision_block}
 # 🕰️ СВИНОПАС: Воспоминания (Timeline)
 {timeline_context}
 

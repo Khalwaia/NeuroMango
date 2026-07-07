@@ -22,7 +22,7 @@ class LLMEngine:
         )
 
     async def check_heartbeat(self, frame_base64: str, heartbeat_context: str = "") -> str:
-        sys_prompt = build_vision_prompt(self.memory)
+        sys_prompt = build_vision_prompt(self.memory, vision_context=self.vision.get_scene_context() if self.vision else "")
         
         messages = [{"role": "system", "content": sys_prompt}]
         
@@ -148,29 +148,19 @@ class LLMEngine:
         Streams response from the LLM, yields (chunk_text, anim_trigger, is_final).
         Handles memory saving in the background and recursive WebSearch calls.
         """
-        system_prompt = build_system_prompt(self.memory, user_text)
+        # Get vision context (textual scene descriptions)
+        vision_ctx = ""
+        if self.vision and self.vision.mode != "off":
+            vision_ctx = self.vision.get_scene_context()
+        
+        system_prompt = build_system_prompt(self.memory, user_text, vision_context=vision_ctx)
         
         messages = [{"role": "system", "content": system_prompt}]
         messages.extend(self.memory.get_history())
         
         # Оборачиваем сообщение в теги ролей
         tagged_user_text = f"[Сообщение от: {sender_name} (Роль: {sender_role})]: {user_text}"
-        
-        # Подмешиваем картинку, если зрение включено
-        if self.vision and self.vision.mode != "off":
-            frame = self.vision.get_latest_frame()
-            if frame:
-                messages.append({
-                    "role": "user",
-                    "content": [
-                        {"type": "text", "text": tagged_user_text},
-                        {"type": "image_url", "image_url": {"url": f"data:image/jpeg;base64,{frame}"}}
-                    ]
-                })
-            else:
-                messages.append({"role": "user", "content": tagged_user_text})
-        else:
-            messages.append({"role": "user", "content": tagged_user_text})
+        messages.append({"role": "user", "content": tagged_user_text})
         
         full_reply = ""
         raw_reply = ""
@@ -189,10 +179,8 @@ class LLMEngine:
         self.memory.add_to_history("user", tagged_user_text)
         self.memory.add_to_history("assistant", raw_reply.strip())
         
-        # 🚀 Запуск СВИНОПАС в фоне!
-        # 🚀 Запуск СВИНОПАС в фоне (ему отдаем чистый текст, чтобы он не индексировал экшены как речь)
-        clean_svinopas = re.sub(r'\[.*?\]', '', raw_reply).strip()
-        asyncio.create_task(self._run_svinopas_background(tagged_user_text, clean_svinopas))
+        # 🚀 Запуск СВИНОПАС в фоне (отдаем СЫРОЙ текст, включая мысли и действия)
+        asyncio.create_task(self._run_svinopas_background(tagged_user_text, raw_reply.strip()))
 
     async def _generate_internal(self, messages: list, user_text: str):
         try:
