@@ -230,7 +230,7 @@ async def heartbeat_loop():
             # 4. Environmental info
             minutes_silent = int(time_since_last // 60)
             env_info = f"[Окружение]: Тишина уже {minutes_silent} мин."
-            if config.TWITCH_ENABLED:
+            if modules_state.get("twitch", False):
                 env_info += " Режим: Стрим на Twitch."
             else:
                 env_info += " Режим: Локальный (без стрима)."
