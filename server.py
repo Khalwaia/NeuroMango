@@ -180,9 +180,9 @@ async def heartbeat_loop():
                 continue
                 
             logger.info("💓 Heartbeat: Chat is silent for 2 minutes. Triggering spontaneous action.")
-            prompt = "[СИСТЕМНОЕ СООБЩЕНИЕ]: На стриме уже 2 минуты абсолютная тишина. Никто ничего не пишет, никаких системных событий нет. Отреагируй на эту тишину. Сделай ровно ОДНО короткое действие (например, зевни, вздохни, скажи что-то короткое, включи музыку или пошути над Артёмом). НЕ ПИШИ ДЛИННЫЕ ТЕКСТЫ."
+            prompt = "[СИСТЕМНОЕ СОБЫТИЕ: АФК РЕЖИМ]. На стриме уже 2 минуты полная тишина. Развлеки себя или зрителей: прокомментируй это, погугли что-то интересное, поставь музыку или используй звуки. Сделай одно-два коротких действия. НЕ ПИШИ ДЛИННЫХ ТЕКСТОВ."
             
-            _schedule_speech(prompt, is_heartbeat=True, sender_name="Система", sender_role="system")
+            _schedule_speech(prompt, is_heartbeat=True, sender_name="Системный монитор", sender_role="system")
             shared_state.last_interaction_time = time.time()
 
 @app.on_event("startup")
@@ -357,52 +357,6 @@ async def _send_speech(text: str, is_heartbeat: bool = False, sender_name: str =
         await manager.broadcast_json({"type": "emotion", "animation_trigger": "Think"})
         chunk_index = 0
         
-        if is_heartbeat:
-            logger.info("🧠 Spontaneous Heartbeat Speech: %s", text)
-            shared_state.llm.memory.add_to_history("assistant", text)
-            import re
-            from action_handler import execute_action
-            
-            # Parse and execute actions
-            action_matches = re.findall(r'\[Action:\s*(.*?)\]', text, re.IGNORECASE)
-            for action_cmd in action_matches:
-                execute_action(action_cmd)
-                
-            # WebSearch was already processed by check_heartbeat in shared_state.llm_engine
-            # We don't need to open it in the browser automatically anymore
-            
-            # Parse and log Thoughts
-            thought_matches = re.findall(r'\[Thought:\s*(.*?)\]', text, re.IGNORECASE)
-            for t in thought_matches:
-                logger.info("💭 Нейрона думает: %s", t)
-                # Broadcast thought to UI Dashboard
-                await manager.broadcast_json({"type": "thought", "text": t})
-                
-            # 1. Strip complete tags (now supporting multiline tags with re.DOTALL)
-            clean_text = re.sub(r'\[(?!КРИК|СМЕХ|ГРУСТЬ|SAD|LAUGH|SCREAM|SIGH).*?\]', '', text, flags=re.IGNORECASE | re.DOTALL)
-            # 2. Strip unclosed tags at the end of the string
-            clean_text = re.sub(r'\[(?!КРИК|СМЕХ|ГРУСТЬ|SAD|LAUGH|SCREAM|SIGH)[^\]]*$', '', clean_text, flags=re.IGNORECASE | re.DOTALL).strip()
-            
-            # Also catch missing bracket cases like "Thought: ..."
-            clean_text = re.sub(r'(?i)\bthought:.*', '', clean_text, flags=re.DOTALL).strip()
-            
-            chunks = re.split(r'(?<=[.!?])\s+', clean_text)
-            for i, chunk_text in enumerate(chunks):
-                if chunk_text.strip() and re.search(r'[a-zA-Zа-яА-ЯёЁ0-9]', chunk_text):
-                    audio_base64 = await shared_state.tts.synthesize_chunk(chunk_text, chunk_index)
-                    if audio_base64:
-                        await manager.broadcast_json({
-                            "type": "speak_chunk",
-                            "text": chunk_text,
-                            "animation_trigger": "",
-                            "audio_base64": audio_base64,
-                            "chunk_index": chunk_index,
-                            "is_final": (i == len(chunks) - 1)
-                        })
-                        chunk_index += 1
-            await manager.broadcast_json({"type": "speak_done"})
-            return
-            
         logger.info("🧠 Sending to LLM: %s", text)
         await manager.broadcast_json({"type": "emotion", "animation_trigger": "Think"})
         chunk_index = 0

@@ -80,7 +80,7 @@ def execute_action(action_str: str):
             elif command == "PlaySound":
                 import shared_state
                 logger.info(f"🎵 Выполняю команду: Играю звук {arg}")
-                if hasattr(server, 'audio_service'):
+                if hasattr(shared_state, 'audio_service') and shared_state.audio_service is not None:
                     shared_state.audio_service.play_sound_async(arg)
             elif command == "SendTwitch":
                 import shared_state
