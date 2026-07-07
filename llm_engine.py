@@ -128,12 +128,8 @@ class LLMEngine:
                 logger.info(f"🔍 Heartbeat: Выполняю невидимый поиск: {query}")
                 search_results = await asyncio.to_thread(perform_search, query)
                 
-                # Append assistant message WITH reasoning details intact
-                messages.append({
-                    "role": "assistant",
-                    "content": content,
-                    "reasoning_details": reasoning_details
-                })
+                # Append assistant message EXACTLY as it was returned (with reasoning_details if present)
+                messages.append(assistant_msg)
                 messages.append({"role": "user", "content": f"[РЕЗУЛЬТАТЫ ПОИСКА]:\n{search_results}\nТеперь продолжи свои размышления/действия с учетом найденного."})
                 
                 payload["messages"] = messages

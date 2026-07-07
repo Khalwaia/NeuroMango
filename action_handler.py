@@ -16,15 +16,7 @@ def execute_action(action_str: str):
             command = parts[0].strip()
             arg = parts[1].strip() if len(parts) > 1 else ""
             
-            if command == "OpenBrowser":
-                if arg:
-                    logger.info(f"🌐 Выполняю команду: Ищу в Google ({arg})...")
-                    query = urllib.parse.quote(arg)
-                    webbrowser.open(f"https://www.google.com/search?q={query}")
-                else:
-                    logger.info("🌐 Выполняю команду: Открываю браузер...")
-                    webbrowser.open("https://google.com")
-            elif command == "SearchGoogle":
+            if command == "SearchGoogle":
                 logger.info(f"🌐 Выполняю команду: Ищу в Google ({arg})...")
                 query = urllib.parse.quote(arg)
                 webbrowser.open(f"https://www.google.com/search?q={query}")
