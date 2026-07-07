@@ -3,17 +3,17 @@ import requests
 import zipfile
 import sys
 
-MODEL_URL = "https://alphacephei.com/vosk/models/vosk-model-ru-0.42.zip"
+MODEL_URL = "https://alphacephei.com/vosk/models/vosk-model-small-ru-0.22.zip"
 TARGET_DIR = "models/vosk-model-ru"
-ZIP_PATH = "models/vosk-model-ru-0.42.zip"
+ZIP_PATH = "models/vosk-model-small-ru-0.22.zip"
 
 def download_model():
     os.makedirs("models", exist_ok=True)
     if os.path.exists(TARGET_DIR):
-        print(f"✅ Модель Vosk уже существует в {TARGET_DIR}")
+        print(f"✅ Модель Vosk уже существует в {TARGET_DIR}. Если вы хотите обновить её, сначала удалите папку {TARGET_DIR}")
         return
 
-    print(f"📥 Скачивание тяжелой модели Vosk (1.8 ГБ). Это может занять время...")
+    print(f"📥 Скачивание легкой модели Vosk (45 МБ)...")
     
     # Download
     response = requests.get(MODEL_URL, stream=True)
@@ -33,7 +33,7 @@ def download_model():
     with zipfile.ZipFile(ZIP_PATH, 'r') as zip_ref:
         zip_ref.extractall("models")
         
-    os.rename("models/vosk-model-ru-0.42", TARGET_DIR)
+    os.rename("models/vosk-model-small-ru-0.22", TARGET_DIR)
     os.remove(ZIP_PATH)
     print("✅ Установка Vosk завершена!")
 
