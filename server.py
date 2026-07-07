@@ -180,8 +180,8 @@ async def heartbeat_loop():
             
         import time
         import random
+        import re
         import shared_state
-        import config
         time_since_last = time.time() - shared_state.last_interaction_time
         
         # 120 seconds of absolute silence across everything
@@ -199,7 +199,6 @@ async def heartbeat_loop():
             try:
                 mem_count = memory_mgr.collection.count()
                 if mem_count > 0:
-                    # Pick a random "seed" word to query against for variety
                     seeds = ["Артём", "стрим", "музыка", "игра", "жизнь", "интересно", "смешно", "вспомнить", "скучно", "ночь", "утро", "донат", "чат"]
                     seed = random.choice(seeds)
                     results = memory_mgr.collection.query(
@@ -243,23 +242,59 @@ async def heartbeat_loop():
             else:
                 env_info += " Режим: Локальный (без стрима)."
             
-            # 5. Assemble the subconscious prompt
-            parts = [
-                "[ПОДСОЗНАНИЕ АКТИВИРОВАНО]",
-                env_info,
-            ]
+            # 5. Assemble the subconscious context (injected into check_heartbeat)
+            parts = ["[ПОДСОЗНАНИЕ АКТИВИРОВАНО]", env_info]
             if random_memory:
                 parts.append(random_memory)
             if graph_snippet:
                 parts.append(graph_snippet)
             if history_hint:
                 parts.append(history_hint)
-            parts.append("[Инструкция]: Ты сейчас наедине со своими мыслями. Проанализируй контекст. Можешь: вспомнить что-то и подумать об этом, погуглить то что тебя интересует, поставить музыку, использовать звуки, или просто помолчать (ответь SILENCE). Действуй как живое существо со своим внутренним миром. НЕ ПИШИ ДЛИННЫХ ТЕКСТОВ.")
             
-            prompt = "\n".join(parts)
-            logger.info("💓 Subconscious prompt:\n%s", prompt)
+            heartbeat_context = "\n".join(parts)
+            logger.info("💓 Subconscious context:\n%s", heartbeat_context)
             
-            _schedule_speech(prompt, is_heartbeat=True, sender_name="Подсознание", sender_role="system")
+            # 6. Call LLM silently via check_heartbeat (NO TTS by default)
+            frame = None
+            if shared_state.llm.vision and shared_state.llm.vision.mode != "off":
+                frame = shared_state.llm.vision.get_latest_frame()
+            
+            content = await shared_state.llm.check_heartbeat(frame, heartbeat_context=heartbeat_context)
+            
+            if content and content.strip() != "SILENCE" and "SILENCE" not in content:
+                logger.info("💓 Subconscious response: %s", content[:200])
+                
+                # 7. Run СВИНОПАС on heartbeat response for memory extraction
+                try:
+                    clean_text = re.sub(r'\[.*?\]', '', content).strip()
+                    if clean_text and len(clean_text) > 5:
+                        asyncio.create_task(
+                            shared_state.llm._run_svinopas_background(
+                                f"[Подсознание, тишина {minutes_silent} мин]", clean_text
+                            )
+                        )
+                except Exception as e:
+                    logger.warning("Heartbeat SVINOPAS error: %s", e)
+                
+                # 8. Check if she explicitly wants to SPEAK (not just think/act)
+                # Strip out all tags to see if there's actual spoken text left
+                spoken_text = re.sub(r'\[Thought:.*?\]', '', content, flags=re.IGNORECASE | re.DOTALL)
+                spoken_text = re.sub(r'\[Action:.*?\]', '', spoken_text, flags=re.IGNORECASE)
+                spoken_text = re.sub(r'\[WebSearch=.*?\]', '', spoken_text, flags=re.IGNORECASE)
+                spoken_text = re.sub(r'\[Save:.*?\]', '', spoken_text, flags=re.IGNORECASE)
+                spoken_text = re.sub(r'\[Annoyed\]|\[Shocked\]|\[Frustrated\]|\[Dizzy\]|\[Smile\]|\[Angry\]|\[Sad\]|\[Surprise\]|\[Fun\]|\[Think\]', '', spoken_text, flags=re.IGNORECASE)
+                spoken_text = re.sub(r'\[КРИК\]|\[СМЕХ\]|\[ГРУСТЬ\]', '', spoken_text, flags=re.IGNORECASE)
+                spoken_text = spoken_text.strip()
+                
+                if spoken_text and len(spoken_text) > 3:
+                    # She actually wants to say something out loud — allow TTS
+                    logger.info("💓 Subconscious wants to speak: %s", spoken_text[:80])
+                    _schedule_speech(spoken_text, is_heartbeat=True, sender_name="Подсознание", sender_role="system")
+                else:
+                    logger.info("💓 Subconscious stayed silent (thoughts/actions only).")
+            else:
+                logger.info("💓 Subconscious chose SILENCE.")
+            
             shared_state.last_interaction_time = time.time()
 
 @app.get("/api/modules")

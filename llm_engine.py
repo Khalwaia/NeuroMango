@@ -21,7 +21,7 @@ class LLMEngine:
             base_url=config.LLM_BASE_URL
         )
 
-    async def check_heartbeat(self, frame_base64: str) -> str:
+    async def check_heartbeat(self, frame_base64: str, heartbeat_context: str = "") -> str:
         sys_prompt = build_vision_prompt(self.memory)
         
         messages = [{"role": "system", "content": sys_prompt}]
@@ -73,18 +73,23 @@ class LLMEngine:
         else:
             sys_status = f"\n[СИСТЕМНЫЙ СТАТУС]: Время - {current_time}. Активное окно на ПК Артёма - '{active_window}'.\n[ВАЖНО]: Модуль Twitch ОТКЛЮЧЕН. Стрима нет, зрителей нет. Ты работаешь как локальный ИИ-ассистент. Не пытайся включать музыку (она отключена)."
         
+        # Inject subconscious context if provided
+        subconscious_block = ""
+        if heartbeat_context:
+            subconscious_block = f"\n{heartbeat_context}\n[Инструкция подсознания]: Ты наедине со своими мыслями. Проанализируй контекст выше. Можешь: вспомнить что-то и подумать, погуглить интересное, поставить музыку, использовать звуки, или промолчать (SILENCE). Используй [Thought:] для размышлений. Говори вслух ТОЛЬКО если хочешь позвать Артёма или сообщить что-то срочное."
+        
         if frame_base64:
             messages.append({
                 "role": "user", 
                 "content": [
-                    {"type": "text", "text": f"[СИСТЕМНОЕ СООБЩЕНИЕ]: Вот текущий кадр с экрана/камеры пользователя. Будешь ли ты как-то на него реагировать? Если нет, ответь SILENCE.{sys_status}"},
+                    {"type": "text", "text": f"[СИСТЕМНОЕ СООБЩЕНИЕ]: Вот текущий кадр с экрана/камеры пользователя. Ты работаешь в фоновом режиме.{sys_status}{subconscious_block}"},
                     {"type": "image_url", "image_url": {"url": f"data:image/jpeg;base64,{frame_base64}"}}
                 ]
             })
         else:
             messages.append({
                 "role": "user",
-                "content": f"[СИСТЕМНОЕ СООБЩЕНИЕ]: (Экран не виден). Ты работаешь в фоновом режиме. Хочешь ли ты сделать какое-то действие, поразмыслить или сказать что-то? Если нет, просто ответь SILENCE.{sys_status}"
+                "content": f"[СИСТЕМНОЕ СООБЩЕНИЕ]: (Экран не виден). Ты работаешь в фоновом режиме. Хочешь ли ты сделать какое-то действие, поразмыслить или сказать что-то? Если нет, просто ответь SILENCE.{sys_status}{subconscious_block}"
             })
         
         try:
