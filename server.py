@@ -474,7 +474,7 @@ async def _send_speech(text: str, is_heartbeat: bool = False, sender_name: str =
             if not chunk_text and is_final:
                 # Tell client we are done
                 await manager.broadcast_json({"type": "speak_done"})
-                break
+                continue
                 
             if chunk_text:
                 logger.info("🔊 Generating speech for chunk %d: %s", chunk_index, chunk_text[:60])

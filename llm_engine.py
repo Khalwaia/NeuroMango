@@ -185,23 +185,25 @@ class LLMEngine:
         
         full_reply = ""
         raw_reply = ""
-        async for chunk, raw_chunk, anim_trigger, is_final in self._generate_internal(messages, user_text):
-            full_reply += chunk
-            raw_reply += raw_chunk
-            yield chunk, anim_trigger, is_final
-            
-        # Post-process Memory Saves (Manual overrides from old system, still supported)
-        save_matches = re.finditer(r'\[Save:\s*(.*?)\]', raw_reply, re.IGNORECASE)
-        for match in save_matches:
-            memory_fact = match.group(1).strip()
-            self.memory.save_memory(memory_fact)
-            
-        # Update history with RAW text so she remembers her Thoughts and Actions!
-        self.memory.add_to_history("user", tagged_user_text)
-        self.memory.add_to_history("assistant", raw_reply.strip())
-        
-        # 🚀 Запуск СВИНОПАС в фоне (отдаем СЫРОЙ текст, включая мысли и действия)
-        self._fire_and_forget(self._run_svinopas_background(tagged_user_text, raw_reply.strip()))
+        try:
+            async for chunk, raw_chunk, anim_trigger, is_final in self._generate_internal(messages, user_text):
+                full_reply += chunk
+                raw_reply += raw_chunk
+                yield chunk, anim_trigger, is_final
+        finally:
+            # Post-process Memory Saves (Manual overrides from old system, still supported)
+            save_matches = re.finditer(r'\[Save:\s*(.*?)\]', raw_reply, re.IGNORECASE)
+            for match in save_matches:
+                memory_fact = match.group(1).strip()
+                self.memory.save_memory(memory_fact)
+                
+            # Update history with RAW text so she remembers her Thoughts and Actions!
+            if raw_reply.strip():
+                self.memory.add_to_history("user", tagged_user_text)
+                self.memory.add_to_history("assistant", raw_reply.strip())
+                
+                # 🚀 Запуск СВИНОПАС в фоне (отдаем СЫРОЙ текст, включая мысли и действия)
+                self._fire_and_forget(self._run_svinopas_background(tagged_user_text, raw_reply.strip()))
 
     async def _generate_internal(self, messages: list, user_text: str):
         try:
