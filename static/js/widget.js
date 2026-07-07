@@ -11,7 +11,8 @@ function onYouTubeIframeAPIReady() {
         playerVars: {
             'playsinline': 1,
             'autoplay': 1,
-            'controls': 0
+            'controls': 0,
+            'origin': 'http://127.0.0.1:8766'
         },
         events: {
             'onReady': onPlayerReady,
@@ -21,10 +22,14 @@ function onYouTubeIframeAPIReady() {
     });
 }
 
+let currentSongData = null;
+
 function onPlayerReady(event) {
     isPlayerReady = true;
     console.log("YouTube Player Ready");
-    connectWebSocket(); // Connect only after player is ready
+    if (currentSongData) {
+        handlePlayback(currentSongData);
+    }
 }
 
 function onPlayerStateChange(event) {
@@ -129,6 +134,7 @@ function updateWidgetUI(data) {
 }
 
 function handlePlayback(song) {
+    currentSongData = song;
     if (!isPlayerReady) return;
     
     if (song) {
@@ -145,3 +151,6 @@ function handlePlayback(song) {
         player.stopVideo();
     }
 }
+
+// Connect immediately instead of waiting for YouTube
+connectWebSocket();
