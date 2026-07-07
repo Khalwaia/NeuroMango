@@ -28,7 +28,15 @@ logging.basicConfig(
 logger = logging.getLogger("neuromango")
 
 # ──────────────────────────────── App ──────────────────────────────────
-app = FastAPI(title="NeuroMango", version="0.2.0")
+from contextlib import asynccontextmanager
+
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    asyncio.create_task(initialize_engines())
+    asyncio.create_task(heartbeat_loop())
+    yield
+
+app = FastAPI(title="NeuroMango", version="0.2.0", lifespan=lifespan)
 
 # Mount static files
 app.mount("/static", StaticFiles(directory=str(config.STATIC_DIR)), name="static")
@@ -253,11 +261,6 @@ async def heartbeat_loop():
             
             _schedule_speech(prompt, is_heartbeat=True, sender_name="Подсознание", sender_role="system")
             shared_state.last_interaction_time = time.time()
-
-@app.on_event("startup")
-async def startup_event():
-    asyncio.create_task(initialize_engines())
-    asyncio.create_task(heartbeat_loop())
 
 @app.get("/api/modules")
 async def get_modules():
