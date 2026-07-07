@@ -28,6 +28,10 @@ GROQ_API_KEY = os.getenv("GROQ_API_KEY", "")
 GROQ_MODEL = os.getenv("GROQ_MODEL", "llama-3.1-8b-instant")
 GROQ_BASE_URL = os.getenv("GROQ_BASE_URL", "https://api.groq.com/openai/v1")
 
+# OpenRouter (Heartbeat/Подсознание)
+OPENROUTER_API_KEY = os.getenv("OPENROUTER_API_KEY", "")
+OPENROUTER_MODEL = os.getenv("OPENROUTER_MODEL", "nvidia/nemotron-3-ultra-550b-a55b:free")
+
 # ──────────────────────────────── Memory (ChromaDB) ─────────────────────────
 CHROMA_DB_DIR = BASE_DIR / "memory_db"
 CORE_MEMORY_PATH = BASE_DIR / "core_memory.txt"

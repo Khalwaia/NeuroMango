@@ -78,13 +78,12 @@ class LLMEngine:
         if heartbeat_context:
             subconscious_block = f"\n{heartbeat_context}\n[Инструкция подсознания]: Ты наедине со своими мыслями. Проанализируй контекст выше. Можешь: вспомнить что-то и подумать, погуглить интересное, поставить музыку, использовать звуки, или промолчать (SILENCE). Используй [Thought:] для размышлений. Говори вслух ТОЛЬКО если хочешь позвать Артёма или сообщить что-то срочное."
         
+        # Поскольку Nemotron (и большинство текстовых моделей OpenRouter) не поддерживает зрение напрямую,
+        # передаем только текстовое сообщение. Зрительный контекст уже внедрён через `vision_context` в sys_prompt!
         if frame_base64:
             messages.append({
                 "role": "user", 
-                "content": [
-                    {"type": "text", "text": f"[СИСТЕМНОЕ СООБЩЕНИЕ]: Вот текущий кадр с экрана/камеры пользователя. Ты работаешь в фоновом режиме.{sys_status}{subconscious_block}"},
-                    {"type": "image_url", "image_url": {"url": f"data:image/jpeg;base64,{frame_base64}"}}
-                ]
+                "content": f"[СИСТЕМНОЕ СООБЩЕНИЕ]: Вот текущий кадр с экрана/камеры пользователя (описание выше). Ты работаешь в фоновом режиме.{sys_status}{subconscious_block}"
             })
         else:
             messages.append({
@@ -93,13 +92,28 @@ class LLMEngine:
             })
         
         try:
-            response = await self.client.chat.completions.create(
-                model=config.LLM_MODEL,
-                messages=messages,
-                temperature=0.7,
-                max_tokens=2048
-            )
-            content = response.choices[0].message.content
+            import httpx
+            import json
+            
+            headers = {
+                "Authorization": f"Bearer {config.OPENROUTER_API_KEY}",
+                "Content-Type": "application/json",
+            }
+            
+            payload = {
+                "model": config.OPENROUTER_MODEL,
+                "messages": messages,
+                "reasoning": {"enabled": True}
+            }
+            
+            async with httpx.AsyncClient(timeout=120.0) as client:
+                resp = await client.post("https://openrouter.ai/api/v1/chat/completions", headers=headers, json=payload)
+                resp.raise_for_status()
+                data = resp.json()
+                
+            assistant_msg = data['choices'][0]['message']
+            content = assistant_msg.get('content', '')
+            reasoning_details = assistant_msg.get('reasoning_details')
             
             # Check for WebSearch tags
             search_matches = re.findall(r'\[WebSearch=(.*?)\]', content, re.IGNORECASE)
@@ -107,17 +121,22 @@ class LLMEngine:
                 query = search_matches[0].strip()
                 logger.info(f"🔍 Heartbeat: Выполняю невидимый поиск: {query}")
                 search_results = await asyncio.to_thread(perform_search, query)
-                messages.append({"role": "assistant", "content": content})
-                messages.append({"role": "system", "content": search_results})
                 
-                # Ask LLM again with search results
-                response2 = await self.client.chat.completions.create(
-                    model=config.LLM_MODEL,
-                    messages=messages,
-                    temperature=0.7,
-                    max_tokens=2048
-                )
-                content = content + "\n" + response2.choices[0].message.content
+                # Append assistant message WITH reasoning details intact
+                messages.append({
+                    "role": "assistant",
+                    "content": content,
+                    "reasoning_details": reasoning_details
+                })
+                messages.append({"role": "user", "content": f"[РЕЗУЛЬТАТЫ ПОИСКА]:\n{search_results}\nТеперь продолжи свои размышления/действия с учетом найденного."})
+                
+                payload["messages"] = messages
+                async with httpx.AsyncClient(timeout=120.0) as client:
+                    resp2 = await client.post("https://openrouter.ai/api/v1/chat/completions", headers=headers, json=payload)
+                    resp2.raise_for_status()
+                    data2 = resp2.json()
+                
+                content = content + "\n" + data2['choices'][0]['message'].get('content', '')
                 
             if content and content.strip() != "SILENCE" and "SILENCE" not in content:
                 # 1. Parse and execute Actions
