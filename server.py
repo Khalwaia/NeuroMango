@@ -266,11 +266,10 @@ async def heartbeat_loop():
                 
                 # 7. Run СВИНОПАС on heartbeat response for memory extraction
                 try:
-                    clean_text = re.sub(r'\[.*?\]', '', content).strip()
-                    if clean_text and len(clean_text) > 5:
+                    if content and len(content.strip()) > 5:
                         asyncio.create_task(
                             shared_state.llm._run_svinopas_background(
-                                f"[Подсознание, тишина {minutes_silent} мин]", clean_text
+                                f"[Подсознание, тишина {minutes_silent} мин]", content.strip()
                             )
                         )
                 except Exception as e:
