@@ -126,7 +126,10 @@ async def initialize_engines():
     
     # Wait briefly so frontend has time to connect its WebSocket
     await asyncio.sleep(1)
-    logger.info("🚀 Starting async background initialization...")
+    logger.info("🔧 Starting AI Server Initialization...")
+    shared_state.main_loop = asyncio.get_running_loop()
+    
+    # 1. Start heavy models loading in a background thread to not block the main loop
     await manager.broadcast_json({"type": "system_log", "text": "System Online. Initializing AI Models (This takes 20-30s)..."})
     
     def _init():

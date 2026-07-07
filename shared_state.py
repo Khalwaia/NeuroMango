@@ -10,3 +10,4 @@ llm = None
 
 import time
 last_interaction_time = time.time()
+main_loop = None

@@ -69,23 +69,34 @@ def execute_action(action_str: str):
                     dest = os.path.abspath(src_dest[1].strip())
                     shutil.move(src, dest)
                     logger.info(f"📁 Выполняю команду: Перемещаю файл {src} -> {dest}")
+            elif command == "QueueMusic":
+                import shared_state
+                logger.info(f"🎵 Выполняю команду: Заказ музыки ({arg})")
+                if hasattr(shared_state, 'music_service') and shared_state.music_service:
+                    if hasattr(shared_state, 'main_loop') and shared_state.main_loop:
+                        import asyncio
+                        asyncio.run_coroutine_threadsafe(shared_state.music_service.add_to_queue(arg), shared_state.main_loop)
+                    else:
+                        import asyncio
+                        asyncio.create_task(shared_state.music_service.add_to_queue(arg))
+                else:
+                    logger.error("❌ Music service is not initialized!")
+            elif command == "SendTwitch":
+                import shared_state
+                import asyncio
+                logger.info(f"✉️ Выполняю команду: Пишу в Twitch чат ({arg})")
+                if hasattr(shared_state, 'twitch_service') and shared_state.twitch_service:
+                    if hasattr(shared_state, 'main_loop') and shared_state.main_loop:
+                        asyncio.run_coroutine_threadsafe(shared_state.twitch_service.send_message(arg), shared_state.main_loop)
+                    else:
+                        asyncio.create_task(shared_state.twitch_service.send_message(arg))
+                else:
+                    logger.error("❌ Twitch service is not initialized!")
             elif command == "PlaySound":
                 import shared_state
                 logger.info(f"🎵 Выполняю команду: Играю звук {arg}")
                 if hasattr(shared_state, 'audio_service') and shared_state.audio_service is not None:
                     shared_state.audio_service.play_sound_async(arg)
-            elif command == "SendTwitch":
-                import shared_state
-                import asyncio
-                logger.info(f"✉️ Выполняю команду: Пишу в Twitch чат ({arg})")
-                if hasattr(shared_state, 'twitch_service'):
-                    asyncio.create_task(shared_state.twitch_service.send_chat_message(arg))
-            elif command == "QueueMusic":
-                import shared_state
-                import asyncio
-                logger.info(f"🎶 Выполняю команду: Добавляю в очередь музыку ({arg})")
-                if hasattr(shared_state, 'music_service'):
-                    asyncio.create_task(shared_state.music_service.add_to_queue(arg))
             elif command == "RunCommand":
                 import subprocess
                 logger.info(f"💻 Выполняю команду ОС: {arg.strip()}")
