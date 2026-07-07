@@ -287,9 +287,11 @@ class LLMEngine:
                         
                     return # Полностью выходим из текущего генератора
                 
-                # Если ИИ прямо сейчас печатает тег (есть открывающая скобка, но нет закрывающей),
+                # Если ИИ прямо сейчас печатает тег (последняя скобка - открывающая),
                 # мы ждем и не отправляем незаконченный тег в TTS!
-                if '[' in buffer and ']' not in buffer:
+                last_open = buffer.rfind('[')
+                last_close = buffer.rfind(']')
+                if last_open != -1 and last_open > last_close:
                     continue
                 
                 # Начинаем цикл, чтобы вытащить все предложения из буфера, если их пришло сразу несколько
@@ -307,16 +309,29 @@ class LLMEngine:
                         
                     end_pos = match.end()
                     sentence = clean_buffer[:end_pos].strip()
-                    if sentence:
+                    
+                    # Do not yield sentences that are purely punctuation or empty
+                    has_letters = bool(re.search(r'[A-Za-zА-Яа-яЁё0-9]', sentence))
+                    
+                    if sentence and has_letters:
                         yield sentence, raw_buffer, anim_trigger, False
                         raw_buffer = ""
                         anim_trigger = "" # Reset animation
+                    elif not has_letters:
+                        # Even if we don't yield, we must consume this part of raw_buffer and anim_trigger
+                        # so they don't awkwardly attach to the next actual sentence.
+                        raw_buffer = ""
+                        anim_trigger = ""
+                        
                     buffer = re.sub(r'\[(?!КРИК|СМЕХ|ГРУСТЬ|SAD|LAUGH|SCREAM|SIGH).*?\]', '', buffer, flags=re.IGNORECASE | re.DOTALL)[end_pos:].lstrip()
 
         # Yield any remaining text
         remaining = re.sub(r'\[(?!КРИК|СМЕХ|ГРУСТЬ|SAD|LAUGH|SCREAM|SIGH).*?\]', '', buffer, flags=re.IGNORECASE | re.DOTALL).strip()
-        if remaining or raw_buffer:
-            yield remaining, raw_buffer, anim_trigger, True
+        has_letters_remaining = bool(re.search(r'[A-Za-zА-Яа-яЁё0-9]', remaining))
+        
+        if (remaining and has_letters_remaining) or raw_buffer:
+            # We yield even if remaining has no letters IF there is raw_buffer to send to the chat
+            yield remaining if has_letters_remaining else "", raw_buffer, anim_trigger, True
             
         else:
             yield "", "", "", True
