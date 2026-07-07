@@ -75,7 +75,7 @@ async def on_twitch_message(username, text):
 
 async def start_twitch():
     
-    from shared_state.twitch_service import TwitchService
+    from twitch_service import TwitchService
     if shared_state.twitch_service is None:
         shared_state.twitch_service = TwitchService(on_twitch_message)
         if shared_state.twitch_service.message_callback:
@@ -98,7 +98,7 @@ async def on_donation(username, amount, currency, message):
 
 async def start_da():
     
-    from shared_state.da_service import DonationAlertsService
+    from da_service import DonationAlertsService
     if shared_state.da_service is None:
         shared_state.da_service = DonationAlertsService(
             token=config.DA_WIDGET_TOKEN, 
