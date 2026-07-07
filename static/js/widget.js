@@ -47,8 +47,13 @@ function onPlayerError(event) {
 
 let ws;
 function connectWebSocket() {
-    const wsProtocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
-    const wsUrl = `${wsProtocol}//${window.location.host}/ws`;
+    let wsUrl;
+    if (window.location.protocol === 'file:') {
+        wsUrl = 'ws://127.0.0.1:8766/ws';
+    } else {
+        const wsProtocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
+        wsUrl = `${wsProtocol}//${window.location.host}/ws`;
+    }
     
     ws = new WebSocket(wsUrl);
 

@@ -49,9 +49,10 @@ class MusicService:
             self.queue.append(result)
             logger.info(f"✅ Added to queue: {result['title']}")
             
-            # If nothing is playing, we might want to auto-play if the frontend requests it,
-            # but usually the frontend asks for the next song when it's ready.
-            # We just broadcast the updated queue.
+            # If nothing is playing, auto-play immediately by popping the queue
+            if self.current_song is None and len(self.queue) > 0:
+                self.current_song = self.queue.pop(0)
+
             if self.on_queue_update:
                 await self.on_queue_update()
             return True
