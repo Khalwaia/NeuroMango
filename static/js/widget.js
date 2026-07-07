@@ -2,6 +2,12 @@ let player;
 let isPlayerReady = false;
 let currentSongId = null;
 
+// Dynamically load YouTube IFrame API
+const tag = document.createElement('script');
+tag.src = "https://www.youtube.com/iframe_api";
+const firstScriptTag = document.getElementsByTagName('script')[0];
+firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
+
 // Initialize YouTube IFrame API
 function onYouTubeIframeAPIReady() {
     player = new YT.Player('youtube-player', {
