@@ -20,6 +20,12 @@ class LLMEngine:
             api_key=config.LLM_API_KEY,
             base_url=config.LLM_BASE_URL
         )
+        self._bg_tasks = set()
+
+    def _fire_and_forget(self, coro):
+        task = asyncio.create_task(coro)
+        self._bg_tasks.add(task)
+        task.add_done_callback(self._bg_tasks.discard)
 
     async def check_heartbeat(self, frame_base64: str, heartbeat_context: str = "") -> str:
         sys_prompt = build_vision_prompt(self.memory, vision_context=self.vision.get_scene_context() if self.vision else "")
@@ -199,7 +205,7 @@ class LLMEngine:
         self.memory.add_to_history("assistant", raw_reply.strip())
         
         # 🚀 Запуск СВИНОПАС в фоне (отдаем СЫРОЙ текст, включая мысли и действия)
-        asyncio.create_task(self._run_svinopas_background(tagged_user_text, raw_reply.strip()))
+        self._fire_and_forget(self._run_svinopas_background(tagged_user_text, raw_reply.strip()))
 
     async def _generate_internal(self, messages: list, user_text: str):
         try:

@@ -42,7 +42,16 @@ Output ONLY valid JSON, nothing else.
             )
             
             result = chat_completion.choices[0].message.content
-            data = json.loads(result)
+            
+            # Gemini иногда оборачивает JSON в ```json ... ``` даже в режиме json_object
+            clean_result = result.strip()
+            if clean_result.startswith("```json"):
+                clean_result = clean_result[7:]
+            if clean_result.endswith("```"):
+                clean_result = clean_result[:-3]
+            clean_result = clean_result.strip()
+            
+            data = json.loads(clean_result)
             
             # Log what was extracted
             summary = data.get("summary", "")
