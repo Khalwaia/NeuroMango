@@ -18,9 +18,9 @@ for _dir in [MODELS_DIR, STATIC_DIR, VOICE_SAMPLES_DIR, TEMP_DIR]:
     _dir.mkdir(parents=True, exist_ok=True)
 
 # ──────────────────────────────── LLM (Brain) ──────────────────────────────
-# Основная модель для общения (DeepSeek V3 через OpenRouter)
+# Основная модель для общения (DeepSeek V4 Flash через OpenRouter)
 LLM_API_KEY = os.getenv("LLM_API_KEY", "")
-LLM_MODEL = os.getenv("LLM_MODEL", "deepseek/deepseek-chat")
+LLM_MODEL = os.getenv("LLM_MODEL", "deepseek/deepseek-v4-flash")
 LLM_BASE_URL = os.getenv("LLM_BASE_URL", "https://openrouter.ai/api/v1")
 
 # Подсознание (СВИНОПАС - Экстрактор памяти)
