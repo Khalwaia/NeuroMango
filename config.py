@@ -18,10 +18,10 @@ for _dir in [MODELS_DIR, STATIC_DIR, VOICE_SAMPLES_DIR, TEMP_DIR]:
     _dir.mkdir(parents=True, exist_ok=True)
 
 # ──────────────────────────────── LLM (Brain) ──────────────────────────────
-# Основная модель для общения (Gemini)
+# Основная модель для общения (DeepSeek V3 через OpenRouter)
 LLM_API_KEY = os.getenv("LLM_API_KEY", "")
-LLM_MODEL = os.getenv("LLM_MODEL", "gemini-3.1-flash-lite")
-LLM_BASE_URL = os.getenv("LLM_BASE_URL", "https://generativelanguage.googleapis.com/v1beta/openai/")
+LLM_MODEL = os.getenv("LLM_MODEL", "deepseek/deepseek-chat")
+LLM_BASE_URL = os.getenv("LLM_BASE_URL", "https://openrouter.ai/api/v1")
 
 # Подсознание (СВИНОПАС - Экстрактор памяти)
 GROQ_API_KEY = os.getenv("GROQ_API_KEY", "")
@@ -30,7 +30,7 @@ GROQ_BASE_URL = os.getenv("GROQ_BASE_URL", "https://api.groq.com/openai/v1")
 
 # OpenRouter (Heartbeat/Подсознание)
 OPENROUTER_API_KEY = os.getenv("OPENROUTER_API_KEY", "")
-OPENROUTER_MODEL = os.getenv("OPENROUTER_MODEL", "nvidia/nemotron-3-ultra-550b-a55b:free")
+OPENROUTER_MODEL = os.getenv("OPENROUTER_MODEL", "openai/gpt-4o-mini")
 
 # ──────────────────────────────── Memory (ChromaDB) ─────────────────────────
 CHROMA_DB_DIR = BASE_DIR / "memory_db"
