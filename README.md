@@ -101,7 +101,8 @@ graph LR
 В корневой папке проекта создайте файл `.env` (можете скопировать из `.env.example`, если он есть) и заполните его:
 
 ```env
-# API Ключ для OpenRouter (для DeepSeek и GPT-4o-mini)
+# API Ключ для OpenRouter (поскольку и Главный Мозг, и Heartbeat работают через него,
+# один и тот же ключ нужно вставить в обе переменные ниже):
 OPENROUTER_API_KEY="sk-or-v1-ваш-ключ-от-openrouter"
 LLM_API_KEY="sk-or-v1-ваш-ключ-от-openrouter"
 
