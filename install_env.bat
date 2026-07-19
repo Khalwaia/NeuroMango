@@ -6,10 +6,13 @@ if %ERRORLEVEL% NEQ 0 (
     exit /b %ERRORLEVEL%
 )
 
+echo Upgrading pip and build tools...
+call venv\Scripts\python.exe -m pip install --upgrade pip setuptools wheel
+
 echo Installing PyTorch with CUDA support...
 call venv\Scripts\python.exe -m pip install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cu118
 
-echo Installing Python dependencies...
-call venv\Scripts\python.exe -m pip install fastapi uvicorn websockets openai soundfile torchaudio edge-tts nest_asyncio pydub
+echo Installing Python dependencies from requirements.txt...
+call venv\Scripts\python.exe -m pip install -r requirements.txt
 
 echo Done!
